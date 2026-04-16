@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Mocha</title>
+  <meta name="description" content="Mocha — Build the new way with the next-generation agentic IDE." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Google Sans Flex (exact font from antigravity.google) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,slnt,wdth,wght,ROND@8..144,-10..0,25..150,400..500,0..100&display=swap" rel="stylesheet" />
+  <!-- Google Symbols (icon font used for orbs) -->
+  <link href="https://fonts.googleapis.com/css2?family=Google+Symbols:opsz,wght,FILL,GRAD,ROND@40..48,300,0..1,0,50&display=block" rel="stylesheet" />
+
+  <style>
+    /* ════════════════════════════════════════════════
+       DESIGN TOKENS — extracted from antigravity.google
+       styles-7KLEMMT6.css
+       ════════════════════════════════════════════════ */
+    :root {
+      /* Palette */
+      --palette-grey-0:    #FFFFFF;
+      --palette-grey-10:   #F8F9FC;
+      --palette-grey-20:   #EFF2F7;
+      --palette-grey-50:   #E6EAF0;
+      --palette-grey-100:  #E1E6EC;
+      --palette-grey-200:  #CDD4DC;
+      --palette-grey-300:  #B2BBC5;
+      --palette-grey-400:  #B7BFD9;
+      --palette-grey-800:  #45474D;
+      --palette-grey-900:  #2F3034;
+      --palette-grey-1000: #212226;
+      --palette-grey-1100: #18191D;
+      --palette-grey-1200: #121317;
+      --palette-blue-600:  #3279F9;
+
+      /* Semantic */
+      --color-surface:     var(--palette-grey-0);
+      --color-on-surface:  var(--palette-grey-1200);
+      --color-muted:       var(--palette-grey-800);
+      --color-border:      var(--palette-grey-100);
+      --color-primary:     var(--palette-grey-1200);
+
+      /* Typography */
+      --font-main: 'Google Sans Flex', 'Google Sans', Arial, sans-serif;
+      --landing-main-text-size: 107px;
+
+      /* Spacing */
+      --space-none: 0px;
+      --space-xs:   4px;
+      --space-sm:   8px;
+      --space-md:   16px;
+      --space-lg:   24px;
+      --space-xl:   36px;
+      --space-2xl:  48px;
+      --space-3xl:  60px;
+      --space-4xl:  80px;
+      --space-5xl:  88px;
+      --space-6xl:  120px;
+      --space-7xl:  180px;
+
+      /* Shape */
+      --shape-corner-xs:      4px;
+      --shape-corner-sm:      8px;
+      --shape-corner-md:      16px;
+      --shape-corner-lg:      24px;
+      --shape-corner-xl:      36px;
+      --shape-corner-2xl:     48px;
+      --shape-corner-rounded: 9999px;
+
+      /* Grid */
+      --page-margin: 72px;
+    }
+
+    /* ── Responsive tokens ── */
+    @media (max-width: 1600px) { :root { --page-margin: 40px; --landing-main-text-size: 72px; } }
+    @media (max-width: 1024px) { :root { --page-margin: 40px; --landing-main-text-size: 56px; } }
+    @media (max-width: 767px)  { :root { --page-margin: 16px; --landing-main-text-size: 46px; } }
+    @media (max-width: 425px)  { :root { --landing-main-text-size: 30px; --shape-corner-xl: 24px; } }
+
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: var(--font-main);
+      background: var(--color-surface);
+      color: var(--color-on-surface);
+      overflow-x: hidden;
+    }
+
+    /* ════════════════════════════════════════════════
+       NAV
+       ════════════════════════════════════════════════ */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      padding: 0 var(--page-margin);
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--palette-grey-100);
+      transition: box-shadow .2s;
+    }
+    .nav.scrolled { box-shadow: 0 1px 12px rgba(0,0,0,0.06); }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 17px;
+      color: var(--color-on-surface);
+      letter-spacing: -0.01em;
+    }
+    .nav-logo svg { flex-shrink: 0; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 450;
+      color: var(--palette-grey-800);
+      padding: 6px 12px;
+      border-radius: var(--shape-corner-rounded);
+      transition: color .15s, background .15s;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .nav-links a:hover { color: var(--color-on-surface); background: var(--palette-grey-10); }
+    .nav-links .chevron { font-size: 16px; opacity: .6; }
+
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      background: var(--palette-grey-1200);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: var(--shape-corner-rounded);
+      transition: background .15s, transform .15s;
+    }
+    .nav-cta:hover { background: var(--palette-grey-1000); transform: translateY(-1px); }
+    .nav-cta svg { width: 16px; height: 16px; }
+
+    @media (max-width: 767px) {
+      .nav-links { display: none; }
+    }
+
+    /* ════════════════════════════════════════════════
+       HERO
+       ════════════════════════════════════════════════ */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px var(--page-margin) 100px;
+      overflow: hidden;
+    }
+
+    /* Particle canvas */
+    #particle-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+    }
+
+    .hero-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 48px;
+    }
+    .hero-logo-text {
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--color-on-surface);
+    }
+
+    .hero-headline {
+      font-size: var(--landing-main-text-size);
+      font-weight: 500;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--palette-grey-1200);
+      margin-bottom: 40px;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--palette-grey-1200);
+      color: #fff;
+      font-family: var(--font-main);
+      font-size: 15px;
+      font-weight: 500;
+      padding: 14px 28px;
+      border: none;
+      border-radius: var(--shape-corner-rounded);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .15s, transform .15s;
+    }
+    .btn-primary:hover { background: var(--palette-grey-1000); transform: translateY(-1px); }
+    .btn-primary svg { width: 17px; height: 17px; }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--palette-grey-1200);
+      font-family: var(--font-main);
+      font-size: 15px;
+      font-weight: 500;
+      padding: 13px 28px;
+      border: 1.5px solid var(--palette-grey-200);
+      border-radius: var(--shape-corner-rounded);
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color .15s, background .15s, transform .15s;
+    }
+    .btn-secondary:hover {
+      border-color: var(--palette-grey-400);
+      background: var(--palette-grey-10);
+      transform: translateY(-1px);
+    }
+
+    /* ════════════════════════════════════════════════
+       SECTION 2 — ORB ICONS + HEADLINE
+       ════════════════════════════════════════════════ */
+    .section-orbs {
+      position: relative;
+      padding: var(--space-7xl) var(--page-margin);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* Scrolling orb belt — infinite loop */
+    .orb-belt-wrapper {
+      width: 100%;
+      overflow: hidden;
+      margin-bottom: var(--space-6xl);
+      mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+    }
+    .orb-belt {
+      display: flex;
+      gap: 20px;
+      width: max-content;
+      animation: beltScroll 28s linear infinite;
+    }
+    .orb-belt:hover { animation-play-state: paused; }
+
+    @keyframes beltScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    .orb {
+      flex-shrink: 0;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 1.5px solid var(--palette-grey-100);
+      background: var(--palette-grey-0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--palette-grey-800);
+      transition: transform .25s, box-shadow .25s, border-color .25s;
+      cursor: default;
+      animation: orbFloat var(--float-dur, 4s) ease-in-out infinite;
+      animation-delay: var(--float-delay, 0s);
+    }
+    .orb:hover {
+      transform: scale(1.1) translateY(-4px) !important;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.10);
+      border-color: var(--palette-grey-300);
+    }
+    .orb .google-symbols {
+      font-family: 'Google Symbols', sans-serif;
+      font-size: 28px;
+      font-weight: 300;
+      line-height: 1;
+      user-select: none;
+    }
+
+    @keyframes orbFloat {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+
+    /* Headline */
+    .section-headline {
+      max-width: 820px;
+      text-align: left;
+      font-size: clamp(32px, 5vw, 64px);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      color: var(--palette-grey-1200);
+    }
+    .cursor-blink {
+      display: inline-block;
+      width: 3px;
+      height: 0.9em;
+      background: var(--palette-blue-600);
+      margin-left: 4px;
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink {
+      0%,100% { opacity: 1; }
+      50%      { opacity: 0; }
+    }
+
+    /* ════════════════════════════════════════════════
+       SECTION 3 — AGENT BROWSER DEMO
+       ════════════════════════════════════════════════ */
+    .section-demo {
+      padding: var(--space-6xl) var(--page-margin);
+      background: var(--palette-grey-10);
+    }
+    .demo-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .demo-label {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--palette-grey-800);
+      margin-bottom: var(--space-lg);
+    }
+    .demo-headline {
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 500;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      color: var(--palette-grey-1200);
+      margin-bottom: var(--space-3xl);
+      max-width: 600px;
+    }
+
+    /* Browser frame */
+    .browser-frame {
+      border-radius: var(--shape-corner-xl);
+      overflow: hidden;
+      border: 1.5px solid var(--palette-grey-100);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+    }
+    .browser-chrome {
+      background: var(--palette-grey-1100);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .browser-dots { display: flex; gap: 6px; }
+    .browser-dots span {
+      width: 12px; height: 12px; border-radius: 50%;
+    }
+    .browser-dots span:nth-child(1) { background: #FF5F57; }
+    .browser-dots span:nth-child(2) { background: #FFBD2E; }
+    .browser-dots span:nth-child(3) { background: #28CA41; }
+    .browser-url {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+    .browser-url-bar {
+      background: rgba(255,255,255,0.08);
+      border-radius: 6px;
+      padding: 4px 16px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 200px;
+      justify-content: center;
+    }
+    .browser-body {
+      background: linear-gradient(160deg, #0f1a35 0%, #111827 50%, #1a0f35 100%);
+      padding: 48px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      min-height: 420px;
+    }
+
+    /* Agent badge row */
+    .agent-badges {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .agent-badge {
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: var(--shape-corner-rounded);
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.75);
+      backdrop-filter: blur(8px);
+    }
+    .badge-play {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.08);
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .badge-play:hover { background: rgba(255,255,255,0.14); }
+
+    /* Flight tracker demo */
+    .flight-tracker {
+      width: 100%;
+      max-width: 400px;
+    }
+    .ft-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .ft-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 22px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .ft-sub { font-size: 13px; color: rgba(255,255,255,0.5); }
+
+    .ft-search {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: var(--shape-corner-md);
+      padding: 10px 14px;
+      margin-bottom: 16px;
+    }
+    .ft-search input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 14px;
+      flex: 1;
+      font-family: var(--font-main);
+    }
+    .ft-search-btn {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.6);
+      transition: background .15s;
+    }
+    .ft-search-btn:hover { background: rgba(255,255,255,0.2); }
+
+    .ft-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: var(--shape-corner-lg);
+      padding: 20px;
+    }
+    .ft-airline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .ft-airline-icon {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ft-airline-name { font-weight: 600; font-size: 15px; color: #fff; }
+    .ft-airline-num  { font-size: 12px; color: rgba(255,255,255,0.4); }
+    .ft-route { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .ft-city-label {
+      display: flex; align-items: center; gap: 4px;
+      font-size: 11px; color: rgba(255,255,255,0.45);
+      margin-bottom: 4px;
+    }
+    .ft-city-dot { width: 8px; height: 8px; border-radius: 50%; background: #34d399; }
+    .ft-city-code { font-size: 26px; font-weight: 700; color: #fff; }
+    .ft-city-name { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
+    .ft-city-time { font-size: 11px; color: rgba(255,255,255,0.35); display: flex; align-items: center; gap: 3px; }
+
+    /* ════════════════════════════════════════════════
+       SECTION 4 — USE CASES GRID
+       ════════════════════════════════════════════════ */
+    .section-usecases {
+      padding: var(--space-6xl) var(--page-margin);
+    }
+    .usecases-inner { max-width: 1100px; margin: 0 auto; }
+    .usecases-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: var(--space-3xl);
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    .usecases-title {
+      font-size: clamp(24px, 3.5vw, 44px);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      max-width: 480px;
+    }
+    .arrow-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--palette-grey-800);
+      text-decoration: none;
+      transition: color .15s, gap .2s;
+    }
+    .arrow-link:hover { color: var(--color-on-surface); gap: 10px; }
+
+    .usecases-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 1024px) { .usecases-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 600px)  { .usecases-grid { grid-template-columns: 1fr; } }
+
+    .usecase-card {
+      border: 1.5px solid var(--palette-grey-100);
+      border-radius: var(--shape-corner-xl);
+      padding: var(--space-2xl);
+      background: var(--palette-grey-0);
+      transition: border-color .2s, box-shadow .2s, transform .2s;
+      cursor: pointer;
+    }
+    .usecase-card:hover {
+      border-color: var(--palette-grey-300);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.07);
+      transform: translateY(-2px);
+    }
+    .uc-icon {
+      width: 48px; height: 48px; border-radius: var(--shape-corner-md);
+      background: var(--palette-grey-10);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: var(--space-lg);
+      font-family: 'Google Symbols', sans-serif;
+      font-size: 24px;
+      color: var(--palette-grey-900);
+    }
+    .uc-title { font-size: 17px; font-weight: 500; margin-bottom: 8px; }
+    .uc-desc  { font-size: 14px; color: var(--palette-grey-800); line-height: 1.55; }
+
+    /* ════════════════════════════════════════════════
+       SECTION 5 — PRICING CTA
+       ════════════════════════════════════════════════ */
+    .section-cta {
+      padding: var(--space-6xl) var(--page-margin);
+      background: var(--palette-grey-1200);
+      text-align: center;
+    }
+    .cta-inner { max-width: 640px; margin: 0 auto; }
+    .cta-headline {
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 500;
+      letter-spacing: -0.025em;
+      color: #fff;
+      margin-bottom: var(--space-lg);
+    }
+    .cta-sub {
+      font-size: 17px;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: var(--space-3xl);
+      line-height: 1.5;
+    }
+    .btn-white {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #fff;
+      color: var(--palette-grey-1200);
+      font-family: var(--font-main);
+      font-size: 15px;
+      font-weight: 500;
+      padding: 14px 32px;
+      border: none;
+      border-radius: var(--shape-corner-rounded);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .15s, transform .15s;
+    }
+    .btn-white:hover { background: var(--palette-grey-10); transform: translateY(-1px); }
+
+    /* ════════════════════════════════════════════════
+       FOOTER
+       ════════════════════════════════════════════════ */
+    .footer {
+      background: var(--palette-grey-1200);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: var(--space-4xl) var(--page-margin);
+      color: rgba(255,255,255,0.45);
+      font-size: 13px;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-logo {
+      display: flex; align-items: center; gap: 8px;
+      color: rgba(255,255,255,0.6);
+      font-weight: 500;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+    .footer-links a {
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      transition: color .15s;
+    }
+    .footer-links a:hover { color: rgba(255,255,255,0.8); }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVBAR ── -->
+  <header class="nav" id="nav">
+    <a href="/" class="nav-logo">
+      <!-- Mocha logomark -->
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 2L4 8.5v11L14 26l10-6.5v-11L14 2z" stroke="#2F3034" stroke-width="1.6" fill="none"/>
+        <path d="M14 6.5L7 10.75v8.5L14 23.5l7-4.25v-8.5L14 6.5z" fill="#2F3034" opacity=".12"/>
+        <path d="M14 10.5L10 12.75v4.5L14 19.5l4-2.25v-4.5L14 10.5z" fill="#2F3034"/>
+      </svg>
+      <span>Mocha</span>
+    </a>
+
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#product">Product</a></li>
+        <li><a href="#usecases">Use Cases <span class="chevron">›</span></a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#blog">Blog</a></li>
+        <li><a href="#resources">Resources <span class="chevron">›</span></a></li>
+      </ul>
+    </nav>
+
+    <a href="#download" class="nav-cta">
+      Download
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+    </a>
+  </header>
+
+  <main>
+
+    <!-- ── HERO ── -->
+    <section class="hero" id="product">
+      <canvas id="particle-canvas"></canvas>
+
+      <div class="hero-inner">
+        <!-- Logo lockup in hero -->
+        <div class="hero-logo">
+          <svg width="36" height="36" viewBox="0 0 28 28" fill="none">
+            <path d="M14 2L4 8.5v11L14 26l10-6.5v-11L14 2z" stroke="#2F3034" stroke-width="1.4" fill="none"/>
+            <path d="M14 6.5L7 10.75v8.5L14 23.5l7-4.25v-8.5L14 6.5z" fill="#2F3034" opacity=".1"/>
+            <path d="M14 10.5L10 12.75v4.5L14 19.5l4-2.25v-4.5L14 10.5z" fill="#2F3034"/>
+          </svg>
+          <span class="hero-logo-text">Mocha</span>
+        </div>
+
+        <h1 class="hero-headline">
+          Experience liftoff with the<br/>next-generation IDE
+        </h1>
+
+        <div class="hero-actions">
+          <a href="#download" class="btn-primary" id="download">
+            <svg viewBox="0 0 20 20" fill="currentColor" style="width:16px;height:16px;">
+              <path d="M3 5.5a.5.5 0 01.5-.5h4a.5.5 0 010 1H4v9h12V6h-3.5a.5.5 0 010-1h4a.5.5 0 01.5.5v10a.5.5 0 01-.5.5h-13a.5.5 0 01-.5-.5v-10z"/>
+              <path d="M9.646 11.854a.5.5 0 00.708 0l3-3a.5.5 0 00-.708-.708L10.5 10.293V3.5a.5.5 0 00-1 0v6.793L7.354 8.146a.5.5 0 10-.708.708l3 3z"/>
+            </svg>
+            Download for Windows
+          </a>
+          <a href="#usecases" class="btn-secondary">Explore use cases</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ORB BELT + HEADLINE ── -->
+    <section class="section-orbs">
+      <!-- Infinite scrolling orb belt -->
+      <div class="orb-belt-wrapper">
+        <div class="orb-belt" id="orb-belt">
+          <!-- Orbs injected by JS -->
+        </div>
+      </div>
+
+      <p class="section-headline">
+        Mocha is our agentic development platform, evolving the IDE into the agent-first era.<span class="cursor-blink"></span>
+      </p>
+    </section>
+
+    <!-- ── BROWSER DEMO ── -->
+    <section class="section-demo" id="demo">
+      <div class="demo-inner">
+        <p class="demo-label">Agent Controlled Browser</p>
+        <h2 class="demo-headline">Watch Mocha build, test, and ship — on its own.</h2>
+
+        <div class="browser-frame">
+          <div class="browser-chrome">
+            <div class="browser-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="browser-url">
+              <div class="browser-url-bar">
+                <svg width="12" height="12" fill="none" stroke="rgba(255,255,255,0.4)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                localhost:3000
+              </div>
+            </div>
+          </div>
+
+          <div class="browser-body">
+            <div class="agent-badges">
+              <div class="agent-badge">Agent Controlled Browser</div>
+              <div class="agent-badge badge-play">
+                <svg width="12" height="12" fill="white" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/></svg>
+                Play intro
+              </div>
+            </div>
+
+            <div class="flight-tracker">
+              <div class="ft-header">
+                <div class="ft-title">
+                  <svg width="22" height="22" fill="none" stroke="white" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg>
+                  Flight Tracker
+                </div>
+                <div class="ft-sub">Track any flight, anytime, anywhere.</div>
+              </div>
+
+              <div class="ft-search">
+                <span style="color:rgba(255,255,255,0.4);font-size:13px;">AA123</span>
+                <div style="flex:1;"></div>
+                <div style="width:12px;height:12px;border-radius:50%;background:#3279F9;"></div>
+                <button class="ft-search-btn">
+                  <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                </button>
+              </div>
+
+              <div class="ft-card">
+                <div class="ft-airline">
+                  <div class="ft-airline-icon">
+                    <svg width="18" height="18" fill="none" stroke="white" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg>
+                  </div>
+                  <div>
+                    <div class="ft-airline-name">American Airlines</div>
+                    <div class="ft-airline-num">100</div>
+                  </div>
+                </div>
+                <div class="ft-route">
+                  <div>
+                    <div class="ft-city-label"><span class="ft-city-dot"></span>Origin</div>
+                    <div class="ft-city-code">JFK</div>
+                    <div class="ft-city-name">John F Kennedy International</div>
+                    <div class="ft-city-time">
+                      <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 6v6l4 2"/></svg>
+                      10:25 AM PST
+                    </div>
+                  </div>
+                  <div>
+                    <div class="ft-city-label"><span class="ft-city-dot"></span>Destination</div>
+                    <div class="ft-city-code">LHR</div>
+                    <div class="ft-city-name">Heathrow</div>
+                    <div class="ft-city-time">
+                      <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 6v6l4 2"/></svg>
+                      10:20 PM PST
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── USE CASES ── -->
+    <section class="section-usecases" id="usecases">
+      <div class="usecases-inner">
+        <div class="usecases-header">
+          <h2 class="usecases-title">Built for every kind of developer workflow</h2>
+          <a href="#" class="arrow-link">Explore all use cases →</a>
+        </div>
+
+        <div class="usecases-grid">
+          <div class="usecase-card">
+            <div class="uc-icon">web</div>
+            <div class="uc-title">Frontend development</div>
+            <div class="uc-desc">Design, build, and iterate on UI at the speed of thought. Mocha understands your component library and design system.</div>
+          </div>
+          <div class="usecase-card">
+            <div class="uc-icon">terminal</div>
+            <div class="uc-title">Backend & APIs</div>
+            <div class="uc-desc">Generate endpoints, write migrations, and wire up integrations — with full context of your existing codebase.</div>
+          </div>
+          <div class="usecase-card">
+            <div class="uc-icon">bug_report</div>
+            <div class="uc-title">Debugging</div>
+            <div class="uc-desc">Describe the bug in plain language. Mocha traces the root cause, proposes a fix, and runs the tests to verify.</div>
+          </div>
+          <div class="usecase-card">
+            <div class="uc-icon">autorenew</div>
+            <div class="uc-title">Refactoring</div>
+            <div class="uc-desc">Modernize legacy code, rename across your entire codebase, or restructure architecture — all in a single session.</div>
+          </div>
+          <div class="usecase-card">
+            <div class="uc-icon">science</div>
+            <div class="uc-title">Testing</div>
+            <div class="uc-desc">Write unit tests, integration tests, and end-to-end tests that cover your real code paths, not just happy paths.</div>
+          </div>
+          <div class="usecase-card">
+            <div class="uc-icon">rocket_launch</div>
+            <div class="uc-title">Deployment</div>
+            <div class="uc-desc">From local dev to production. Mocha configures CI/CD, writes Dockerfiles, and manages your infra as code.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CTA ── -->
+    <section class="section-cta" id="pricing">
+      <div class="cta-inner">
+        <h2 class="cta-headline">Start building with Mocha</h2>
+        <p class="cta-sub">The agent-first IDE is here. Download free and ship faster than ever before.</p>
+        <a href="#download" class="btn-white">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.5a.5.5 0 01.5-.5h4a.5.5 0 010 1H4v9h12V6h-3.5a.5.5 0 010-1h4a.5.5 0 01.5.5v10a.5.5 0 01-.5.5h-13a.5.5 0 01-.5-.5v-10z"/></svg>
+          Download for Windows
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <a href="/" class="footer-logo">
+        <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
+          <path d="M14 2L4 8.5v11L14 26l10-6.5v-11L14 2z" stroke="rgba(255,255,255,0.5)" stroke-width="1.4" fill="none"/>
+          <path d="M14 10.5L10 12.75v4.5L14 19.5l4-2.25v-4.5L14 10.5z" fill="rgba(255,255,255,0.5)"/>
+        </svg>
+        Mocha
+      </a>
+      <nav class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Blog</a>
+        <a href="#">Careers</a>
+        <a href="#">Contact</a>
+      </nav>
+      <span>&copy; 2026 Mocha. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script>
+  /* ══════════════════════════════════════════
+     PARTICLE CANVAS — matches antigravity.google
+     Scattered colored dashes: blue + red/pink
+     ══════════════════════════════════════════ */
+  (function() {
+    const canvas = document.getElementById('particle-canvas');
+    const ctx    = canvas.getContext('2d');
+    // Colors from the palette + screenshots
+    const COLORS = [
+      '#3279F9','#5A9CFB','#1A6EF8',   // blues (palette-blue-600 family)
+      '#F04040','#F87171','#E53E3E',   // reds
+      '#B78AF7','#9B7EF5',             // purples
+      '#F472B6','#EC4899',             // pinks
+    ];
+    let W, H, dpr, particles = [];
+
+    function resize() {
+      dpr    = window.devicePixelRatio || 1;
+      W      = canvas.offsetWidth;
+      H      = canvas.offsetHeight;
+      canvas.width  = W * dpr;
+      canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function mkParticle() {
+      const angle = Math.random() * Math.PI * 2;
+      return {
+        x:     Math.random() * W,
+        y:     Math.random() * H,
+        len:   5 + Math.random() * 13,
+        w:     1.4 + Math.random() * 2,
+        angle,
+        vx:    Math.cos(angle) * (.12 + Math.random() * .22),
+        vy:    Math.sin(angle) * (.12 + Math.random() * .22),
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        alpha: .2 + Math.random() * .5,
+      };
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      particles.forEach(p => {
+        ctx.save();
+        ctx.globalAlpha  = p.alpha;
+        ctx.strokeStyle  = p.color;
+        ctx.lineWidth    = p.w;
+        ctx.lineCap      = 'round';
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.angle);
+        ctx.beginPath();
+        ctx.moveTo(-p.len / 2, 0);
+        ctx.lineTo( p.len / 2, 0);
+        ctx.stroke();
+        ctx.restore();
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < -20) p.x = W + 20;
+        if (p.x > W+20) p.x = -20;
+        if (p.y < -20) p.y = H + 20;
+        if (p.y > H+20) p.y = -20;
+      });
+      requestAnimationFrame(draw);
+    }
+
+    resize();
+    particles = Array.from({length: 95}, mkParticle);
+    draw();
+    window.addEventListener('resize', () => { resize(); particles = Array.from({length:95}, mkParticle); });
+  })();
+
+  /* ══════════════════════════════════════════
+     ORB BELT — Google Symbols icons
+     ══════════════════════════════════════════ */
+  (function() {
+    const belt = document.getElementById('orb-belt');
+    const icons = [
+      'drag_indicator','grid_view','keyboard_return','data_object',
+      'code','auto_awesome','terminal','monitor','account_tree',
+      'search','refresh','view_in_ar','check_circle','tune',
+      'electric_bolt','psychology','hub','rocket_launch'
+    ];
+    // Duplicate for seamless loop
+    const all = [...icons, ...icons];
+    all.forEach((ic, i) => {
+      const orb = document.createElement('div');
+      orb.className = 'orb';
+      orb.style.setProperty('--float-dur',   `${3.2 + (i % 6) * .6}s`);
+      orb.style.setProperty('--float-delay', `${(i % 9) * -.55}s`);
+      orb.innerHTML = `<span class="google-symbols">${ic}</span>`;
+      belt.appendChild(orb);
+    });
+  })();
+
+  /* ══════════════════════════════════════════
+     NAVBAR scroll effect
+     ══════════════════════════════════════════ */
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 8);
+  }, {passive: true});
+  </script>
+</body>
+</html>

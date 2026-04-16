@@ -1,0 +1,95 @@
+/* ── Custom properties ── */
+:root {
+  --color-primary: #c27d34;
+  --color-primary-light: #d49a55;
+  --font-heading: 'Inter', sans-serif;
+}
+
+/* ── Global resets & base ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Cursor blink animation ── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+.animate-blink { animation: blink 1s step-end infinite; }
+
+/* ── Action chip buttons ── */
+.action-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #111827;           /* gray-900 */
+  border: 1px solid #1f2937;    /* gray-800 */
+  border-radius: 9999px;
+  color: #9ca3af;                /* gray-400 */
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.action-chip:hover {
+  background: #1f2937;
+  border-color: #374151;
+  color: #fff;
+}
+
+/* ── Icon orb circles ── */
+.icon-orb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  color: #6b7280;
+  transition: transform 0.3s, box-shadow 0.3s;
+  animation: float var(--float-duration, 4s) ease-in-out infinite;
+  animation-delay: var(--float-delay, 0s);
+  flex-shrink: 0;
+}
+.icon-orb:hover {
+  transform: translateY(-6px) scale(1.08);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+
+/* ── Send button active state ── */
+#send-btn.active {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+}
+
+/* ── Particle canvas ── */
+#particle-canvas {
+  z-index: 0;
+}
+
+/* ── Navbar scroll shadow ── */
+#navbar.scrolled {
+  box-shadow: 0 1px 12px rgba(0,0,0,0.08);
+}
+
+/* ── Smooth section transitions ── */
+section { will-change: transform; }
+
+/* ── Responsive tweaks ── */
+@media (max-width: 640px) {
+  .icon-orb { width: 56px; height: 56px; }
+  .icon-orb svg { width: 22px; height: 22px; }
+}
