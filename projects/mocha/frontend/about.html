@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Mocha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,slnt,wdth,wght,ROND@8..144,-10..0,25..150,400..500,0..100&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Design tokens ─────────────────────────────────────────── */
+    :root {
+      --palette-grey-0:    #FFFFFF;
+      --palette-grey-10:   #F8F9FC;
+      --palette-grey-20:   #EFF2F7;
+      --palette-grey-50:   #E6EAF0;
+      --palette-grey-100:  #E1E6EC;
+      --palette-grey-200:  #CDD4DC;
+      --palette-grey-800:  #45474D;
+      --palette-grey-900:  #2F3034;
+      --palette-grey-1200: #121317;
+      --palette-blue-600:  #3279F9;
+
+      --nav-height: 64px;
+      --page-margin: 72px;
+      --font: 'Google Sans Flex', 'Google Sans', system-ui, sans-serif;
+    }
+
+    /* ─── Reset ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--palette-grey-0);
+      color: var(--palette-grey-1200);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+
+    /* ─── NAV ────────────────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-height);
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--palette-grey-100);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 0 var(--page-margin);
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--palette-grey-1200);
+      margin-right: 40px;
+      flex-shrink: 0;
+    }
+    .nav-logo svg { flex-shrink: 0; }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
+    }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--palette-grey-800);
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .nav-links a:hover { background: var(--palette-grey-20); color: var(--palette-grey-1200); }
+    .nav-links a.active { color: var(--palette-grey-1200); font-weight: 500; }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .btn-ghost {
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--palette-grey-1200);
+      background: transparent;
+      border: 1.5px solid var(--palette-grey-200);
+      border-radius: 999px;
+      padding: 7px 18px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .btn-ghost:hover { background: var(--palette-grey-10); border-color: var(--palette-grey-800); }
+    .btn-primary {
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      background: var(--palette-blue-600);
+      border: none;
+      border-radius: 999px;
+      padding: 8px 20px;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    /* ─── HERO ───────────────────────────────────────────────────── */
+    .hero {
+      margin-top: var(--nav-height);
+      background: var(--palette-grey-1200);
+      min-height: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 100px var(--page-margin) 96px;
+      position: relative;
+      overflow: hidden;
+    }
+    /* animated gradient orbs */
+    .hero-orbs {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.18;
+      animation: drift 14s ease-in-out infinite alternate;
+    }
+    .orb-1 {
+      width: 520px; height: 520px;
+      background: radial-gradient(circle, #3279F9, transparent 70%);
+      top: -140px; left: -60px;
+      animation-duration: 16s;
+    }
+    .orb-2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, #9B5DE5, transparent 70%);
+      bottom: -80px; right: -40px;
+      animation-duration: 20s;
+      animation-delay: -6s;
+    }
+    .orb-3 {
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, #F72585, transparent 70%);
+      top: 40%; left: 55%;
+      animation-duration: 12s;
+      animation-delay: -3s;
+    }
+    @keyframes drift {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(40px, 30px) scale(1.08); }
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 760px; }
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--palette-blue-600);
+      background: rgba(50, 121, 249, 0.12);
+      border: 1px solid rgba(50, 121, 249, 0.25);
+      border-radius: 999px;
+      padding: 4px 14px;
+      margin-bottom: 28px;
+    }
+    .hero-headline {
+      font-size: clamp(36px, 5.5vw, 64px);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      color: var(--palette-grey-0);
+      margin-bottom: 24px;
+    }
+    .hero-headline em {
+      font-style: normal;
+      background: linear-gradient(90deg, #3279F9, #9B5DE5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-subtitle {
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--palette-grey-200);
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* ─── MISSION ────────────────────────────────────────────────── */
+    .mission {
+      background: var(--palette-grey-0);
+      padding: 112px var(--page-margin);
+    }
+    .mission-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: start;
+    }
+    .mission-quote {
+      font-size: clamp(28px, 3vw, 40px);
+      font-weight: 500;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: var(--palette-grey-1200);
+      border-left: 3px solid var(--palette-blue-600);
+      padding-left: 28px;
+      position: sticky;
+      top: calc(var(--nav-height) + 32px);
+    }
+    .mission-body p {
+      font-size: 17px;
+      line-height: 1.75;
+      color: var(--palette-grey-800);
+      margin-bottom: 20px;
+    }
+    .mission-body p:last-child { margin-bottom: 0; }
+
+    /* ─── STATS ──────────────────────────────────────────────────── */
+    .stats {
+      background: var(--palette-grey-10);
+      border-top: 1px solid var(--palette-grey-100);
+      border-bottom: 1px solid var(--palette-grey-100);
+      padding: 64px var(--page-margin);
+    }
+    .stats-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+    }
+    .stat-item {
+      text-align: center;
+      padding: 24px 16px;
+    }
+    .stat-item + .stat-item {
+      border-left: 1px solid var(--palette-grey-100);
+    }
+    .stat-number {
+      font-size: clamp(32px, 3.5vw, 48px);
+      font-weight: 500;
+      color: var(--palette-grey-1200);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-label {
+      font-size: 14px;
+      color: var(--palette-grey-800);
+      letter-spacing: 0.01em;
+    }
+
+    /* ─── OUR STORY / TIMELINE ───────────────────────────────────── */
+    .story {
+      background: var(--palette-grey-0);
+      padding: 112px var(--page-margin);
+    }
+    .section-heading {
+      font-size: clamp(28px, 3vw, 40px);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--palette-grey-1200);
+      margin-bottom: 64px;
+    }
+    .story-inner { max-width: 760px; margin: 0 auto; }
+    .timeline {
+      position: relative;
+      padding-left: 40px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--palette-blue-600), var(--palette-grey-200));
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 56px;
+    }
+    .timeline-item:last-child { margin-bottom: 0; }
+    .timeline-dot {
+      position: absolute;
+      left: -36px;
+      top: 6px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--palette-blue-600);
+      border: 3px solid var(--palette-grey-0);
+      box-shadow: 0 0 0 2px var(--palette-blue-600);
+    }
+    .timeline-date {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--palette-blue-600);
+      margin-bottom: 6px;
+    }
+    .timeline-title {
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--palette-grey-1200);
+      margin-bottom: 10px;
+    }
+    .timeline-text {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--palette-grey-800);
+    }
+
+    /* ─── TEAM ───────────────────────────────────────────────────── */
+    .team {
+      background: var(--palette-grey-10);
+      padding: 112px var(--page-margin);
+    }
+    .team-inner { max-width: 1080px; margin: 0 auto; }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .team-card {
+      background: var(--palette-grey-0);
+      border: 1px solid var(--palette-grey-100);
+      border-radius: 16px;
+      padding: 32px 28px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      cursor: default;
+    }
+    .team-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+      border-color: var(--palette-grey-200);
+    }
+    .team-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      margin-bottom: 20px;
+    }
+    .team-name {
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--palette-grey-1200);
+      margin-bottom: 4px;
+    }
+    .team-role {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--palette-blue-600);
+      margin-bottom: 12px;
+    }
+    .team-bio {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--palette-grey-800);
+    }
+
+    /* ─── VALUES ─────────────────────────────────────────────────── */
+    .values {
+      background: var(--palette-grey-0);
+      padding: 112px var(--page-margin);
+    }
+    .values-inner { max-width: 1080px; margin: 0 auto; }
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+    .value-card {
+      background: var(--palette-grey-10);
+      border: 1px solid var(--palette-grey-50);
+      border-radius: 16px;
+      padding: 36px 32px;
+    }
+    .value-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(50, 121, 249, 0.10);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    .value-title {
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--palette-grey-1200);
+      margin-bottom: 10px;
+    }
+    .value-desc {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--palette-grey-800);
+    }
+
+    /* ─── CAREERS CTA ────────────────────────────────────────────── */
+    .careers {
+      background: var(--palette-grey-1200);
+      padding: 112px var(--page-margin);
+      text-align: center;
+    }
+    .careers-inner { max-width: 760px; margin: 0 auto; }
+    .careers-headline {
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 500;
+      letter-spacing: -0.025em;
+      color: var(--palette-grey-0);
+      margin-bottom: 16px;
+    }
+    .careers-sub {
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--palette-grey-200);
+      margin-bottom: 56px;
+    }
+    .open-roles {
+      list-style: none;
+      margin-bottom: 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .role-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 12px;
+      padding: 18px 24px;
+      text-align: left;
+      transition: background 0.15s;
+    }
+    .role-item:hover { background: rgba(255,255,255,0.09); }
+    .role-name {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--palette-grey-0);
+    }
+    .role-meta {
+      font-size: 13px;
+      color: var(--palette-grey-200);
+      margin-top: 3px;
+    }
+    .role-arrow {
+      color: var(--palette-grey-200);
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .btn-careers {
+      display: inline-block;
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--palette-grey-1200);
+      background: var(--palette-grey-0);
+      border: none;
+      border-radius: 999px;
+      padding: 13px 32px;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.15s;
+      text-decoration: none;
+    }
+    .btn-careers:hover { opacity: 0.90; transform: translateY(-2px); }
+
+    /* ─── FOOTER ─────────────────────────────────────────────────── */
+    .footer {
+      background: var(--palette-grey-1200);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 48px var(--page-margin);
+    }
+    .footer-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--palette-grey-0);
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 4px;
+      align-items: center;
+    }
+    .footer-links a {
+      font-size: 13px;
+      color: var(--palette-grey-200);
+      padding: 4px 10px;
+      border-radius: 6px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .footer-links a:hover { color: var(--palette-grey-0); background: rgba(255,255,255,0.06); }
+    .footer-copy {
+      width: 100%;
+      font-size: 12px;
+      color: var(--palette-grey-800);
+      margin-top: 8px;
+    }
+
+    /* ─── MOBILE NAV TOGGLE ──────────────────────────────────────── */
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      margin-left: auto;
+      color: var(--palette-grey-1200);
+    }
+    .nav-mobile {
+      display: none;
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      :root { --page-margin: 40px; }
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      :root { --page-margin: 16px; }
+
+      /* Nav */
+      .nav { padding: 0 16px; }
+      .nav-links, .nav-actions { display: none; }
+      .nav-toggle { display: block; }
+      .nav-mobile.open {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: var(--nav-height);
+        left: 0; right: 0;
+        background: rgba(255,255,255,0.97);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--palette-grey-100);
+        padding: 16px;
+        z-index: 99;
+        gap: 4px;
+      }
+      .nav-mobile a {
+        font-size: 15px;
+        color: var(--palette-grey-800);
+        padding: 10px 12px;
+        border-radius: 8px;
+        display: block;
+      }
+      .nav-mobile a:hover { background: var(--palette-grey-20); }
+      .nav-mobile .mobile-actions {
+        display: flex;
+        gap: 8px;
+        padding-top: 8px;
+        border-top: 1px solid var(--palette-grey-100);
+        margin-top: 4px;
+      }
+      .nav-mobile .mobile-actions .btn-ghost,
+      .nav-mobile .mobile-actions .btn-primary {
+        flex: 1;
+        text-align: center;
+      }
+
+      /* Mission */
+      .mission-inner { grid-template-columns: 1fr; gap: 40px; }
+      .mission-quote { position: static; }
+
+      /* Stats */
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+      .stat-item + .stat-item { border-left: none; }
+      .stats-inner .stat-item:nth-child(odd) { border-right: 1px solid var(--palette-grey-100); }
+
+      /* Team */
+      .team-grid { grid-template-columns: 1fr; }
+
+      /* Values */
+      .values-grid { grid-template-columns: 1fr; }
+
+      /* Footer */
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 480px) {
+      .stats-inner { grid-template-columns: 1fr; }
+      .stats-inner .stat-item:nth-child(odd) { border-right: none; }
+      .stat-item + .stat-item { border-top: 1px solid var(--palette-grey-100); }
+      .hero { padding: 72px 16px 80px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       NAV
+  ════════════════════════════════════════════════════════════ -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <a class="nav-logo" href="index.html">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="28" height="28" rx="8" fill="#121317"/>
+        <!-- cup body -->
+        <path d="M7 10h11l-1.5 9a1 1 0 01-.99.86H9.49A1 1 0 018.5 19L7 10z" fill="#fff" opacity="0.95"/>
+        <!-- handle -->
+        <path d="M18 12h1.5a2 2 0 010 4H18" stroke="#fff" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.7"/>
+        <!-- steam left -->
+        <path d="M10 8c0 0 1-1.5 0-3" stroke="#3279F9" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+        <!-- steam right -->
+        <path d="M13 8c0 0 1-1.5 0-3" stroke="#3279F9" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+        <!-- saucer -->
+        <path d="M6 20h13" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+      </svg>
+      Mocha
+    </a>
+
+    <div class="nav-links" role="list">
+      <a href="index.html">Product</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="docs.html">Docs</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html" class="active">About</a>
+    </div>
+
+    <div class="nav-actions">
+      <button class="btn-ghost">Sign in</button>
+      <button class="btn-primary">Get started</button>
+    </div>
+
+    <!-- Mobile toggle -->
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" onclick="toggleNav(this)">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <path d="M3 6h16M3 11h16M3 16h16" stroke="#121317" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- Mobile nav drawer -->
+  <div class="nav-mobile" id="mobileNav" role="dialog" aria-label="Mobile navigation">
+    <a href="index.html">Product</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="docs.html">Docs</a>
+    <a href="blog.html">Blog</a>
+    <a href="about.html">About</a>
+    <div class="mobile-actions">
+      <button class="btn-ghost">Sign in</button>
+      <button class="btn-primary">Get started</button>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       HERO
+  ════════════════════════════════════════════════════════════ -->
+  <section class="hero" aria-label="Hero">
+    <div class="hero-orbs" aria-hidden="true">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">About Mocha</div>
+      <h1 class="hero-headline">
+        We're building the future of<br/>
+        <em>how software gets made.</em>
+      </h1>
+      <p class="hero-subtitle">
+        Mocha is a platform for agentic development — where AI doesn't just suggest code,
+        it ships it. We're a small team with a big belief: the best days of software are
+        still ahead of us.
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       MISSION
+  ════════════════════════════════════════════════════════════ -->
+  <section class="mission" aria-labelledby="mission-heading">
+    <div class="mission-inner">
+      <blockquote class="mission-quote" id="mission-heading">
+        "Every developer deserves a brilliant collaborator."
+      </blockquote>
+      <div class="mission-body">
+        <p>
+          We started Mocha because we were exhausted. Not tired from working hard — tired of
+          working on the wrong things. Boilerplate. Wiring. Config files. The thousand tiny
+          tasks that stand between a good idea and a working product.
+        </p>
+        <p>
+          AI promised to fix this. But the early tools felt more like autocomplete on steroids
+          than a real collaborator. They helped you type faster — they didn't help you
+          <em>build</em> faster.
+        </p>
+        <p>
+          Mocha is our answer to that gap. It's an agentic platform that doesn't just generate
+          code — it understands context, makes decisions, and executes entire workflows on your
+          behalf. It's the kind of collaborator that comes in on a Sunday night and says "I took
+          care of that thing."
+        </p>
+        <p>
+          We believe AI agents aren't a novelty. They're the next fundamental layer of software
+          development. And we're here to make sure that layer is fast, reliable, and — above
+          all — delightful to work with.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       STATS
+  ════════════════════════════════════════════════════════════ -->
+  <section class="stats" aria-label="Company statistics">
+    <div class="stats-inner">
+      <div class="stat-item">
+        <div class="stat-number">12,000+</div>
+        <div class="stat-label">Developers worldwide</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">$24M</div>
+        <div class="stat-label">Raised to date</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">99.9%</div>
+        <div class="stat-label">Uptime, always</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">4.8★</div>
+        <div class="stat-label">Average user rating</div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       OUR STORY
+  ════════════════════════════════════════════════════════════ -->
+  <section class="story" aria-labelledby="story-heading">
+    <div class="story-inner">
+      <h2 class="section-heading" id="story-heading">Our story</h2>
+      <div class="timeline" role="list">
+
+        <div class="timeline-item" role="listitem">
+          <div class="timeline-dot" aria-hidden="true"></div>
+          <div class="timeline-date">2023 Q1</div>
+          <div class="timeline-title">The idea</div>
+          <p class="timeline-text">
+            Alex and Sara had been building software professionally for over a decade each.
+            They were frustrated by the same things — not the hard problems, but the boring
+            ones. They started sketching what an AI that could actually <em>act</em> would
+            look like. The napkin drawing is still on the office wall.
+          </p>
+        </div>
+
+        <div class="timeline-item" role="listitem">
+          <div class="timeline-dot" aria-hidden="true"></div>
+          <div class="timeline-date">2023 Q3</div>
+          <div class="timeline-title">First prototype</div>
+          <p class="timeline-text">
+            Mocha v0.1 was built over a single weekend in a rented Airbnb with poor WiFi and
+            excellent coffee. It could clone a GitHub repo, understand its structure, and make
+            a small but real code change autonomously. It worked. Barely — but it worked.
+          </p>
+        </div>
+
+        <div class="timeline-item" role="listitem">
+          <div class="timeline-dot" aria-hidden="true"></div>
+          <div class="timeline-date">2024 Q1</div>
+          <div class="timeline-title">Launch</div>
+          <p class="timeline-text">
+            We posted on a developer forum at 11pm on a Tuesday. By Thursday morning, over
+            1,000 developers had signed up. Our servers melted twice. We didn't sleep much.
+            We've never been happier.
+          </p>
+        </div>
+
+        <div class="timeline-item" role="listitem">
+          <div class="timeline-dot" aria-hidden="true"></div>
+          <div class="timeline-date">2026 Q1</div>
+          <div class="timeline-title">Series A</div>
+          <p class="timeline-text">
+            We raised $24M to pour into what we've always cared about: making Mocha faster,
+            smarter, and more reliable for the developers who depend on it every day. The
+            mission hasn't changed — the runway just got a lot longer.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       TEAM
+  ════════════════════════════════════════════════════════════ -->
+  <section class="team" aria-labelledby="team-heading">
+    <div class="team-inner">
+      <h2 class="section-heading" id="team-heading">The team</h2>
+      <div class="team-grid">
+
+        <article class="team-card">
+          <div class="team-avatar" style="background: linear-gradient(135deg, #3279F9 0%, #7B61FF 100%);" aria-label="Alex Chen avatar"></div>
+          <div class="team-name">Alex Chen</div>
+          <div class="team-role">Co-founder & CEO</div>
+          <p class="team-bio">Obsessed with developer experience. Previously built infra that scaled to 50M users. Believes great tools change how people think.</p>
+        </article>
+
+        <article class="team-card">
+          <div class="team-avatar" style="background: linear-gradient(135deg, #F72585 0%, #FF9E00 100%);" aria-label="Sara Kim avatar"></div>
+          <div class="team-name">Sara Kim</div>
+          <div class="team-role">Co-founder & CTO</div>
+          <p class="team-bio">Previously led infrastructure at Scale AI. Thinks deeply about reliability and agent architecture. Drinks too much coffee — which is why Mocha.</p>
+        </article>
+
+        <article class="team-card">
+          <div class="team-avatar" style="background: linear-gradient(135deg, #00C6AE 0%, #3279F9 100%);" aria-label="Marcus Webb avatar"></div>
+          <div class="team-name">Marcus Webb</div>
+          <div class="team-role">Head of Design</div>
+          <p class="team-bio">Pixels and purpose. Believes design is the last competitive advantage. Will notice if your font is one weight off.</p>
+        </article>
+
+        <article class="team-card">
+          <div class="team-avatar" style="background: linear-gradient(135deg, #FF9E00 0%, #F72585 100%);" aria-label="Priya Nair avatar"></div>
+          <div class="team-name">Priya Nair</div>
+          <div class="team-role">Head of Engineering</div>
+          <p class="team-bio">Ships at the speed of thought. Turns impossible timelines into Tuesday afternoon deliveries. Team's favorite person on crunch week.</p>
+        </article>
+
+        <article class="team-card">
+          <div class="team-avatar" style="background: linear-gradient(135deg, #7B61FF 0%, #00C6AE 100%);" aria-label="James Liu avatar"></div>
+          <div class="team-name">James Liu</div>
+          <div class="team-role">Head of Growth</div>
+          <p class="team-bio">Growth that doesn't feel like growth. Builds loops that make Mocha spread because it's genuinely useful — not because of dark patterns.</p>
+        </article>
+
+        <article class="team-card">
+          <div class="team-avatar" style="background: linear-gradient(135deg, #121317 0%, #3279F9 100%);" aria-label="Fatima Al-Rashid avatar"></div>
+          <div class="team-name">Fatima Al-Rashid</div>
+          <div class="team-role">Head of AI Research</div>
+          <p class="team-bio">Making agents that actually work. PhD in ML systems. Cares deeply about reliability, evaluation, and not shipping things that embarrass the field.</p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       VALUES
+  ════════════════════════════════════════════════════════════ -->
+  <section class="values" aria-labelledby="values-heading">
+    <div class="values-inner">
+      <h2 class="section-heading" id="values-heading">What we believe</h2>
+      <div class="values-grid">
+
+        <div class="value-card">
+          <div class="value-icon" aria-hidden="true">🔓</div>
+          <div class="value-title">Build in public</div>
+          <p class="value-desc">
+            We share our thinking, our mistakes, and our roadmap. We believe transparency
+            builds trust — and that the developer community deserves to see how the
+            sausage is made, even when it's messy.
+          </p>
+        </div>
+
+        <div class="value-card">
+          <div class="value-icon" aria-hidden="true">⌨️</div>
+          <div class="value-title">Developer-first always</div>
+          <p class="value-desc">
+            Every decision goes through one filter: is this actually better for the
+            developer? Not the org chart, not the pitch deck — the person sitting at
+            a keyboard trying to ship something meaningful.
+          </p>
+        </div>
+
+        <div class="value-card">
+          <div class="value-icon" aria-hidden="true">⚡</div>
+          <div class="value-title">Move fast, stay thoughtful</div>
+          <p class="value-desc">
+            We move quickly — but not recklessly. Speed and care aren't opposites.
+            The best teams we've seen do both at once, and that's what we aspire to
+            be every day.
+          </p>
+        </div>
+
+        <div class="value-card">
+          <div class="value-icon" aria-hidden="true">✨</div>
+          <div class="value-title">Make it delightful</div>
+          <p class="value-desc">
+            Good enough isn't good enough. We care about the details that make
+            something feel alive — the animation that's just right, the error message
+            that's actually helpful, the onboarding that feels like a welcome, not a
+            chore.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       CAREERS CTA
+  ════════════════════════════════════════════════════════════ -->
+  <section class="careers" aria-labelledby="careers-heading">
+    <div class="careers-inner">
+      <h2 class="careers-headline" id="careers-heading">Help us build Mocha.</h2>
+      <p class="careers-sub">
+        We're a small team doing big things. If you care deeply about developer experience,
+        AI systems, and building products people love, we'd love to talk.
+      </p>
+
+      <ul class="open-roles" aria-label="Open roles">
+        <li>
+          <a class="role-item" href="#careers" aria-label="Senior Frontend Engineer role">
+            <div>
+              <div class="role-name">Senior Frontend Engineer</div>
+              <div class="role-meta">Remote · Full-time</div>
+            </div>
+            <span class="role-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+        <li>
+          <a class="role-item" href="#careers" aria-label="ML Research Scientist role">
+            <div>
+              <div class="role-name">ML Research Scientist</div>
+              <div class="role-meta">Remote · Full-time</div>
+            </div>
+            <span class="role-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+        <li>
+          <a class="role-item" href="#careers" aria-label="Developer Advocate role">
+            <div>
+              <div class="role-name">Developer Advocate</div>
+              <div class="role-meta">Remote · Full-time</div>
+            </div>
+            <span class="role-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      </ul>
+
+      <a href="#careers" class="btn-careers">See all open roles</a>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════════════════════ -->
+  <footer class="footer" aria-label="Site footer">
+    <div class="footer-inner">
+      <a class="footer-logo" href="index.html">
+        <svg width="22" height="22" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="28" height="28" rx="8" fill="#2F3034"/>
+          <path d="M7 10h11l-1.5 9a1 1 0 01-.99.86H9.49A1 1 0 018.5 19L7 10z" fill="#fff" opacity="0.95"/>
+          <path d="M18 12h1.5a2 2 0 010 4H18" stroke="#fff" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.7"/>
+          <path d="M10 8c0 0 1-1.5 0-3" stroke="#3279F9" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+          <path d="M13 8c0 0 1-1.5 0-3" stroke="#3279F9" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+          <path d="M6 20h13" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+        </svg>
+        Mocha
+      </a>
+
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="index.html">Product</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="docs.html">Docs</a>
+        <a href="blog.html">Blog</a>
+        <a href="about.html">About</a>
+        <a href="#" aria-label="GitHub">GitHub</a>
+        <a href="#" aria-label="Twitter">Twitter</a>
+      </nav>
+
+      <p class="footer-copy">© 2026 Mocha, Inc. All rights reserved.</p>
+    </div>
+  </footer>
+
+
+  <!-- ═══════════════════════════════════════════════════════════
+       JS — mobile nav toggle
+  ════════════════════════════════════════════════════════════ -->
+  <script>
+    function toggleNav(btn) {
+      const nav = document.getElementById('mobileNav');
+      const isOpen = nav.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen);
+      btn.innerHTML = isOpen
+        ? `<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M5 5l12 12M17 5L5 17" stroke="#121317" stroke-width="1.8" stroke-linecap="round"/></svg>`
+        : `<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 6h16M3 11h16M3 16h16" stroke="#121317" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+    }
+
+    // Close mobile nav when clicking outside
+    document.addEventListener('click', function(e) {
+      const nav = document.getElementById('mobileNav');
+      const toggle = document.querySelector('.nav-toggle');
+      if (nav.classList.contains('open') && !nav.contains(e.target) && !toggle.contains(e.target)) {
+        nav.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.innerHTML = `<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 6h16M3 11h16M3 16h16" stroke="#121317" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+      }
+    });
+  </script>
+
+</body>
+</html>

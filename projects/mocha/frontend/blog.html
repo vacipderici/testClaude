@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — Mocha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,slnt,wdth,wght,ROND@8..144,-10..0,25..150,400..500,0..100&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Design tokens ─────────────────────────────────────────── */
+    :root {
+      --palette-grey-0:    #FFFFFF;
+      --palette-grey-10:   #F8F9FC;
+      --palette-grey-20:   #EFF2F7;
+      --palette-grey-50:   #E6EAF0;
+      --palette-grey-100:  #E1E6EC;
+      --palette-grey-200:  #CDD4DC;
+      --palette-grey-800:  #45474D;
+      --palette-grey-900:  #2F3034;
+      --palette-grey-1200: #121317;
+      --palette-blue-600:  #3279F9;
+
+      --nav-height: 64px;
+      --page-margin: 72px;
+
+      font-family: 'Google Sans Flex', 'Google Sans', system-ui, sans-serif;
+      font-size: 16px;
+      color: var(--palette-grey-1200);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--palette-grey-0);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Nav ───────────────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-height);
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--palette-grey-100);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 0 var(--page-margin);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      gap: 0;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--palette-grey-1200);
+      flex-shrink: 0;
+    }
+
+    .nav-logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--palette-grey-800);
+      font-size: 14px;
+      font-weight: 450;
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      background: var(--palette-grey-20);
+      color: var(--palette-grey-1200);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .btn-ghost {
+      text-decoration: none;
+      color: var(--palette-grey-900);
+      font-size: 14px;
+      font-weight: 450;
+      padding: 8px 16px;
+      border-radius: 100px;
+      border: 1px solid var(--palette-grey-200);
+      background: transparent;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-ghost:hover {
+      background: var(--palette-grey-20);
+    }
+
+    .btn-primary {
+      text-decoration: none;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 8px 18px;
+      border-radius: 100px;
+      background: var(--palette-blue-600);
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+
+    /* ── Page shell ────────────────────────────────────────────── */
+    .page {
+      padding-top: var(--nav-height);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--page-margin);
+    }
+
+    /* ── Hero ──────────────────────────────────────────────────── */
+    .blog-hero {
+      padding: 80px 0 56px;
+      text-align: center;
+    }
+
+    .blog-hero h1 {
+      font-size: clamp(36px, 6vw, 60px);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--palette-grey-1200);
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .blog-hero p {
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--palette-grey-800);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── Featured post ─────────────────────────────────────────── */
+    .featured-section {
+      padding-bottom: 64px;
+    }
+
+    .featured-card {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--palette-grey-100);
+      background: var(--palette-grey-0);
+      transition: box-shadow 0.2s, transform 0.2s;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .featured-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.10);
+    }
+
+    .featured-image {
+      background: linear-gradient(135deg, #0d1b4b 0%, #1a0a3d 40%, #5b1a8a 75%, #8b2fc9 100%);
+      min-height: 360px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .featured-image::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 30% 50%, rgba(50, 121, 249, 0.25) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(139, 47, 201, 0.30) 0%, transparent 50%);
+    }
+
+    .featured-image-label {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 100px;
+      padding: 4px 12px;
+    }
+
+    .featured-body {
+      padding: 48px 48px 48px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .tag-badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--palette-blue-600);
+      background: rgba(50, 121, 249, 0.08);
+      border-radius: 100px;
+      padding: 4px 12px;
+      margin-bottom: 20px;
+      width: fit-content;
+    }
+
+    .featured-body h2 {
+      font-size: clamp(20px, 2.4vw, 28px);
+      font-weight: 500;
+      color: var(--palette-grey-1200);
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      margin-bottom: 16px;
+    }
+
+    .featured-body .excerpt {
+      font-size: 15px;
+      color: var(--palette-grey-800);
+      line-height: 1.65;
+      margin-bottom: 32px;
+    }
+
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--palette-grey-800);
+    }
+
+    .author-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3279F9, #8b2fc9);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .post-meta .meta-sep {
+      color: var(--palette-grey-200);
+    }
+
+    /* ── Filter tabs ───────────────────────────────────────────── */
+    .filter-section {
+      padding-bottom: 40px;
+    }
+
+    .filter-tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      border-bottom: 1px solid var(--palette-grey-100);
+      padding-bottom: 0;
+    }
+
+    .filter-tab {
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 450;
+      color: var(--palette-grey-800);
+      background: none;
+      border: none;
+      padding: 10px 16px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      border-radius: 4px 4px 0 0;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+
+    .filter-tab:hover {
+      color: var(--palette-grey-1200);
+      background: var(--palette-grey-10);
+    }
+
+    .filter-tab.active {
+      color: var(--palette-blue-600);
+      border-bottom-color: var(--palette-blue-600);
+      font-weight: 500;
+    }
+
+    /* ── Blog grid ─────────────────────────────────────────────── */
+    .blog-grid-section {
+      padding-bottom: 80px;
+    }
+
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .blog-card {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--palette-grey-100);
+      background: var(--palette-grey-0);
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+
+    .blog-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.09);
+    }
+
+    .card-image {
+      height: 160px;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .card-image.grad-1 { background: linear-gradient(135deg, #1a3a6b 0%, #2d5fa8 100%); }
+    .card-image.grad-2 { background: linear-gradient(135deg, #0f4c35 0%, #1e8a5e 100%); }
+    .card-image.grad-3 { background: linear-gradient(135deg, #4a1a5a 0%, #9b40cc 100%); }
+    .card-image.grad-4 { background: linear-gradient(135deg, #5a1f1f 0%, #c04040 100%); }
+    .card-image.grad-5 { background: linear-gradient(135deg, #1f3a5a 0%, #2979c8 100%); }
+    .card-image.grad-6 { background: linear-gradient(135deg, #1a4a3a 0%, #2dab7e 100%); }
+
+    .card-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 70% 30%, rgba(255,255,255,0.07) 0%, transparent 60%);
+    }
+
+    .card-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .category-badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      border-radius: 100px;
+      padding: 3px 10px;
+      margin-bottom: 12px;
+      width: fit-content;
+    }
+
+    .badge-engineering { color: #2563eb; background: rgba(37, 99, 235, 0.09); }
+    .badge-product     { color: #059669; background: rgba(5, 150, 105, 0.09); }
+    .badge-design      { color: #7c3aed; background: rgba(124, 58, 237, 0.09); }
+    .badge-company     { color: #d97706; background: rgba(217, 119, 6, 0.09); }
+
+    .card-body h3 {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--palette-grey-1200);
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+      margin-bottom: 10px;
+    }
+
+    .card-excerpt {
+      font-size: 13.5px;
+      color: var(--palette-grey-800);
+      line-height: 1.6;
+      margin-bottom: 20px;
+      flex: 1;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--palette-grey-800);
+      padding-top: 16px;
+      border-top: 1px solid var(--palette-grey-50);
+    }
+
+    .card-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .av-blue   { background: linear-gradient(135deg, #3279F9, #5aa0ff); }
+    .av-green  { background: linear-gradient(135deg, #059669, #34d399); }
+    .av-purple { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
+    .av-red    { background: linear-gradient(135deg, #dc2626, #f87171); }
+    .av-indigo { background: linear-gradient(135deg, #4338ca, #818cf8); }
+    .av-teal   { background: linear-gradient(135deg, #0d9488, #5eead4); }
+
+    .card-footer .dot {
+      color: var(--palette-grey-200);
+    }
+
+    /* No results */
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 64px 0;
+      color: var(--palette-grey-800);
+      font-size: 15px;
+      display: none;
+    }
+
+    /* ── Newsletter ────────────────────────────────────────────── */
+    .newsletter-section {
+      background: var(--palette-grey-10);
+      border-top: 1px solid var(--palette-grey-100);
+      border-bottom: 1px solid var(--palette-grey-100);
+      padding: 80px 0;
+      text-align: center;
+    }
+
+    .newsletter-section h2 {
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 500;
+      color: var(--palette-grey-1200);
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+
+    .newsletter-section p {
+      font-size: 16px;
+      color: var(--palette-grey-800);
+      margin-bottom: 32px;
+    }
+
+    .newsletter-form {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    .newsletter-input {
+      flex: 1;
+      height: 44px;
+      padding: 0 16px;
+      border-radius: 100px;
+      border: 1px solid var(--palette-grey-200);
+      background: var(--palette-grey-0);
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--palette-grey-1200);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .newsletter-input::placeholder { color: var(--palette-grey-800); }
+
+    .newsletter-input:focus {
+      border-color: var(--palette-blue-600);
+      box-shadow: 0 0 0 3px rgba(50, 121, 249, 0.12);
+    }
+
+    .newsletter-btn {
+      height: 44px;
+      padding: 0 22px;
+      border-radius: 100px;
+      background: var(--palette-blue-600);
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.15s;
+      white-space: nowrap;
+    }
+
+    .newsletter-btn:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+
+    /* ── Footer ────────────────────────────────────────────────── */
+    .footer {
+      background: var(--palette-grey-1200);
+      padding: 48px 0 36px;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-size: 17px;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .footer-logo svg { opacity: 0.9; }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 4px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      color: rgba(255,255,255,0.55);
+      font-size: 13px;
+      padding: 4px 12px;
+      border-radius: 6px;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .footer-links a:hover {
+      color: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.07);
+    }
+
+    .footer-copyright {
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* ── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      :root { --page-margin: 40px; }
+
+      .blog-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      :root { --page-margin: 16px; }
+
+      .nav-links { display: none; }
+
+      .featured-card {
+        grid-template-columns: 1fr;
+      }
+
+      .featured-image { min-height: 220px; }
+
+      .featured-body {
+        padding: 32px 28px;
+      }
+
+      .blog-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .newsletter-form {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .newsletter-btn {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .nav-actions .btn-ghost { display: none; }
+      .blog-hero { padding: 56px 0 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Nav ────────────────────────────────────────────────────── -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="Mocha home">
+        <!-- Coffee cup SVG -->
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="4" y="10" width="16" height="13" rx="3" fill="#3279F9"/>
+          <path d="M20 13h3a2 2 0 0 1 0 4h-3" stroke="#3279F9" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <rect x="7" y="22" width="10" height="2" rx="1" fill="#3279F9" opacity="0.5"/>
+          <path d="M9 7c0-2 2-2 2-4" stroke="#3279F9" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          <path d="M13 7c0-2 2-2 2-4" stroke="#3279F9" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+        </svg>
+        Mocha
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="index.html">Product</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="docs.html">Docs</a></li>
+        <li><a href="blog.html" class="active">Blog</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="#" class="btn-ghost">Sign in</a>
+        <a href="#" class="btn-primary">Get started</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Page ───────────────────────────────────────────────────── -->
+  <main class="page">
+
+    <!-- Hero -->
+    <section class="blog-hero">
+      <div class="container">
+        <h1>The Mocha Blog</h1>
+        <p>Engineering insights, product updates, and ideas from the team.</p>
+      </div>
+    </section>
+
+    <!-- Featured post -->
+    <section class="featured-section">
+      <div class="container">
+        <a href="#" class="featured-card" aria-label="Read featured post">
+          <div class="featured-image">
+            <span class="featured-image-label">Featured</span>
+          </div>
+          <div class="featured-body">
+            <span class="tag-badge">Featured</span>
+            <h2>Introducing Mocha Agents: The Future of Agentic Development</h2>
+            <p class="excerpt">
+              Today we're announcing Mocha Agents — a new primitive that lets you define, compose, and deploy autonomous AI agents directly inside your development workflow. From code generation to deployment orchestration, agents change everything.
+            </p>
+            <div class="post-meta">
+              <div class="author-avatar" aria-hidden="true">MT</div>
+              <span>Mocha Team</span>
+              <span class="meta-sep">·</span>
+              <span>April 16, 2026</span>
+              <span class="meta-sep">·</span>
+              <span>5 min read</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Filter tabs -->
+    <section class="filter-section">
+      <div class="container">
+        <div class="filter-tabs" role="tablist" aria-label="Filter posts by category">
+          <button class="filter-tab active" data-filter="all" role="tab" aria-selected="true">All</button>
+          <button class="filter-tab" data-filter="engineering" role="tab" aria-selected="false">Engineering</button>
+          <button class="filter-tab" data-filter="product" role="tab" aria-selected="false">Product</button>
+          <button class="filter-tab" data-filter="design" role="tab" aria-selected="false">Design</button>
+          <button class="filter-tab" data-filter="company" role="tab" aria-selected="false">Company</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blog grid -->
+    <section class="blog-grid-section">
+      <div class="container">
+        <div class="blog-grid" id="blogGrid">
+
+          <!-- Card 1: Engineering -->
+          <article class="blog-card" data-category="engineering" tabindex="0" role="article">
+            <div class="card-image grad-1" aria-hidden="true"></div>
+            <div class="card-body">
+              <span class="category-badge badge-engineering">Engineering</span>
+              <h3>How We Built the Mocha Context Engine</h3>
+              <p class="card-excerpt">
+                A deep dive into the architecture behind Mocha's context-aware code understanding — from token budgeting to multi-file semantic graphs.
+              </p>
+              <div class="card-footer">
+                <div class="card-avatar av-blue" aria-hidden="true">SR</div>
+                <span>Sasha R.</span>
+                <span class="dot">·</span>
+                <span>Mar 28</span>
+                <span class="dot">·</span>
+                <span>8 min read</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 2: Product -->
+          <article class="blog-card" data-category="product" tabindex="0" role="article">
+            <div class="card-image grad-2" aria-hidden="true"></div>
+            <div class="card-body">
+              <span class="category-badge badge-product">Product</span>
+              <h3>Ship Faster with Mocha's Multi-Agent Workflows</h3>
+              <p class="card-excerpt">
+                Parallel agent execution, task delegation, and intelligent retries — how Mocha's workflow engine compresses days of work into minutes.
+              </p>
+              <div class="card-footer">
+                <div class="card-avatar av-green" aria-hidden="true">JK</div>
+                <span>Jamie K.</span>
+                <span class="dot">·</span>
+                <span>Mar 15</span>
+                <span class="dot">·</span>
+                <span>6 min read</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 3: Design -->
+          <article class="blog-card" data-category="design" tabindex="0" role="article">
+            <div class="card-image grad-3" aria-hidden="true"></div>
+            <div class="card-body">
+              <span class="category-badge badge-design">Design</span>
+              <h3>Designing for Developers: Mocha's UI Philosophy</h3>
+              <p class="card-excerpt">
+                Why we obsess over density, keyboard-first flows, and honest affordances — and how our design system keeps pace with a fast-moving product.
+              </p>
+              <div class="card-footer">
+                <div class="card-avatar av-purple" aria-hidden="true">AL</div>
+                <span>Anya L.</span>
+                <span class="dot">·</span>
+                <span>Mar 2</span>
+                <span class="dot">·</span>
+                <span>5 min read</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 4: Engineering -->
+          <article class="blog-card" data-category="engineering" tabindex="0" role="article">
+            <div class="card-image grad-4" aria-hidden="true"></div>
+            <div class="card-body">
+              <span class="category-badge badge-engineering">Engineering</span>
+              <h3>Why We Chose React for Mocha's Frontend</h3>
+              <p class="card-excerpt">
+                Evaluating SolidJS, Svelte, and Qwik before landing on React — a pragmatic look at DX, ecosystem, and long-term maintainability tradeoffs.
+              </p>
+              <div class="card-footer">
+                <div class="card-avatar av-red" aria-hidden="true">TM</div>
+                <span>Tom M.</span>
+                <span class="dot">·</span>
+                <span>Feb 18</span>
+                <span class="dot">·</span>
+                <span>7 min read</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 5: Company -->
+          <article class="blog-card" data-category="company" tabindex="0" role="article">
+            <div class="card-image grad-5" aria-hidden="true"></div>
+            <div class="card-body">
+              <span class="category-badge badge-company">Company</span>
+              <h3>Mocha Raises $24M Series A</h3>
+              <p class="card-excerpt">
+                We've closed a $24M Series A led by Benchmark to accelerate our mission: making agentic development the default for every engineering team on the planet.
+              </p>
+              <div class="card-footer">
+                <div class="card-avatar av-indigo" aria-hidden="true">MT</div>
+                <span>Mocha Team</span>
+                <span class="dot">·</span>
+                <span>Feb 5</span>
+                <span class="dot">·</span>
+                <span>3 min read</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 6: Engineering -->
+          <article class="blog-card" data-category="engineering" tabindex="0" role="article">
+            <div class="card-image grad-6" aria-hidden="true"></div>
+            <div class="card-body">
+              <span class="category-badge badge-engineering">Engineering</span>
+              <h3>The Death of Boilerplate: AI-First Development</h3>
+              <p class="card-excerpt">
+                Scaffolding, config files, and repetitive setup are relics of the past. We explore what truly AI-first development looks like end to end.
+              </p>
+              <div class="card-footer">
+                <div class="card-avatar av-teal" aria-hidden="true">PW</div>
+                <span>Priya W.</span>
+                <span class="dot">·</span>
+                <span>Jan 22</span>
+                <span class="dot">·</span>
+                <span>9 min read</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Empty state -->
+          <div class="no-results" id="noResults" role="status" aria-live="polite">
+            No posts in this category yet.
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter-section" aria-labelledby="newsletter-heading">
+      <div class="container">
+        <h2 id="newsletter-heading">Stay in the loop</h2>
+        <p>Get the latest from the Mocha team, delivered to your inbox.</p>
+        <form class="newsletter-form" onsubmit="handleSubscribe(event)" novalidate>
+          <label for="newsletter-email" class="sr-only">Email address</label>
+          <input
+            class="newsletter-input"
+            id="newsletter-email"
+            type="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+          />
+          <button type="submit" class="newsletter-btn">Subscribe</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────────────── -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-inner">
+        <a href="index.html" class="footer-logo" aria-label="Mocha home">
+          <svg viewBox="0 0 28 28" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="4" y="10" width="16" height="13" rx="3" fill="#3279F9"/>
+            <path d="M20 13h3a2 2 0 0 1 0 4h-3" stroke="#3279F9" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <rect x="7" y="22" width="10" height="2" rx="1" fill="#3279F9" opacity="0.5"/>
+            <path d="M9 7c0-2 2-2 2-4" stroke="#3279F9" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M13 7c0-2 2-2 2-4" stroke="#3279F9" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+          </svg>
+          Mocha
+        </a>
+        <ul class="footer-links" role="list">
+          <li><a href="index.html">Product</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="docs.html">Docs</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="https://github.com" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://twitter.com" target="_blank" rel="noopener">Twitter</a></li>
+        </ul>
+        <p class="footer-copyright">&copy; 2026 Mocha, Inc. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Screen-reader only utility -->
+  <style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}</style>
+
+  <script>
+    // ── Category filter ──────────────────────────────────────────
+    const tabs   = document.querySelectorAll('.filter-tab');
+    const cards  = document.querySelectorAll('.blog-card');
+    const noRes  = document.getElementById('noResults');
+
+    function applyFilter(filter) {
+      let visible = 0;
+
+      cards.forEach(card => {
+        const cat = card.dataset.category;
+        const show = filter === 'all' || cat === filter;
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      noRes.style.display = visible === 0 ? 'block' : 'none';
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
+        applyFilter(tab.dataset.filter);
+      });
+    });
+
+    // ── Newsletter submit ────────────────────────────────────────
+    function handleSubscribe(e) {
+      e.preventDefault();
+      const input = document.getElementById('newsletter-email');
+      const btn   = e.target.querySelector('.newsletter-btn');
+      if (!input.value || !input.validity.valid) {
+        input.focus();
+        return;
+      }
+      btn.textContent = 'Subscribed!';
+      btn.style.background = '#059669';
+      input.value = '';
+      input.disabled = true;
+      btn.disabled = true;
+    }
+  </script>
+
+</body>
+</html>

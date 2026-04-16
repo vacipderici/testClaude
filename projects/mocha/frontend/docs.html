@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick Start — Mocha Docs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,slnt,wdth,wght,ROND@8..144,-10..0,25..150,400..500,0..100&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── CSS Custom Properties ─────────────────────────────── */
+    :root {
+      --palette-grey-0:    #FFFFFF;
+      --palette-grey-10:   #F8F9FC;
+      --palette-grey-20:   #EFF2F7;
+      --palette-grey-50:   #E6EAF0;
+      --palette-grey-100:  #E1E6EC;
+      --palette-grey-200:  #CDD4DC;
+      --palette-grey-800:  #45474D;
+      --palette-grey-900:  #2F3034;
+      --palette-grey-1200: #121317;
+      --palette-blue-600:  #3279F9;
+
+      --nav-height: 64px;
+      --sidebar-width: 260px;
+      --page-margin: 72px;
+      --content-max: 760px;
+
+      --font: 'Google Sans Flex', 'Google Sans', system-ui, -apple-system, sans-serif;
+    }
+
+    /* ─── Reset ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      color: var(--palette-grey-900);
+      background: var(--palette-grey-0);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ─── NAV ───────────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      height: var(--nav-height);
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--palette-grey-100);
+      display: flex;
+      align-items: center;
+      padding: 0 var(--page-margin);
+      gap: 40px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--palette-grey-1200);
+      flex-shrink: 0;
+      letter-spacing: -0.3px;
+    }
+    .nav-logo svg { flex-shrink: 0; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
+    }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--palette-grey-800);
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .nav-links a:hover { background: var(--palette-grey-20); color: var(--palette-grey-1200); }
+    .nav-links a.active { color: var(--palette-grey-1200); font-weight: 500; }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .btn-ghost {
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--palette-grey-900);
+      padding: 8px 16px;
+      border-radius: 100px;
+      border: 1.5px solid var(--palette-grey-200);
+      background: transparent;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .btn-ghost:hover { border-color: var(--palette-grey-800); background: var(--palette-grey-10); }
+    .btn-primary {
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 100px;
+      border: none;
+      background: var(--palette-blue-600);
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    /* ─── NAV Mobile Hamburger ──────────────────────────────── */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+      margin-left: auto;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--palette-grey-900);
+      border-radius: 2px;
+      transition: transform 0.25s, opacity 0.25s;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ─── LAYOUT ─────────────────────────────────────────────── */
+    .docs-layout {
+      display: flex;
+      min-height: 100vh;
+      padding-top: var(--nav-height);
+    }
+
+    /* ─── SIDEBAR ─────────────────────────────────────────────── */
+    .sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      position: fixed;
+      top: var(--nav-height);
+      left: 0;
+      bottom: 0;
+      background: var(--palette-grey-10);
+      border-right: 1px solid var(--palette-grey-100);
+      overflow-y: auto;
+      padding: 24px 0 48px;
+      transition: transform 0.3s ease;
+    }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--palette-grey-200); border-radius: 4px; }
+
+    .sidebar-section {
+      padding: 0 16px;
+      margin-bottom: 24px;
+    }
+    .sidebar-section-title {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--palette-grey-800);
+      padding: 0 12px;
+      margin-bottom: 6px;
+    }
+    .sidebar-link {
+      display: block;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--palette-grey-800);
+      padding: 6px 12px;
+      border-radius: 8px;
+      margin-bottom: 1px;
+      transition: background 0.12s, color 0.12s;
+      line-height: 1.4;
+    }
+    .sidebar-link:hover { background: var(--palette-grey-50); color: var(--palette-grey-1200); }
+    .sidebar-link.active {
+      background: #EBF1FF;
+      color: var(--palette-blue-600);
+      font-weight: 500;
+    }
+
+    /* ─── MOBILE SIDEBAR OVERLAY ─────────────────────────────── */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 899;
+    }
+
+    /* ─── MAIN CONTENT AREA ──────────────────────────────────── */
+    .docs-main {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      padding: 0 var(--page-margin);
+      min-width: 0;
+    }
+    .docs-content-wrap {
+      display: flex;
+      gap: 60px;
+      width: 100%;
+      max-width: calc(var(--content-max) + 220px + 60px);
+      padding: 48px 0 96px;
+    }
+
+    /* ─── ARTICLE ─────────────────────────────────────────────── */
+    .docs-article {
+      flex: 1;
+      min-width: 0;
+      max-width: var(--content-max);
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--palette-grey-800);
+      margin-bottom: 20px;
+    }
+    .breadcrumb span { color: var(--palette-grey-200); }
+    .breadcrumb a { color: var(--palette-grey-800); transition: color 0.12s; }
+    .breadcrumb a:hover { color: var(--palette-blue-600); }
+    .breadcrumb .current { color: var(--palette-grey-900); font-weight: 500; }
+
+    /* Headings */
+    .docs-article h1 {
+      font-size: 36px;
+      font-weight: 500;
+      color: var(--palette-grey-1200);
+      letter-spacing: -0.6px;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .docs-article h2 {
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--palette-grey-1200);
+      letter-spacing: -0.3px;
+      margin: 40px 0 12px;
+      padding-top: 8px;
+    }
+    .docs-article h2:first-of-type { margin-top: 32px; }
+
+    /* Paragraph */
+    .docs-article p {
+      font-size: 15px;
+      color: var(--palette-grey-800);
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+
+    /* Divider */
+    .docs-article hr {
+      border: none;
+      border-top: 1px solid var(--palette-grey-100);
+      margin: 40px 0;
+    }
+
+    /* Step labels */
+    .step-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--palette-blue-600);
+      margin-bottom: 6px;
+    }
+    .step-label .step-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--palette-blue-600);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    /* ─── CODE BLOCKS ─────────────────────────────────────────── */
+    .code-block-wrap {
+      position: relative;
+      margin: 16px 0 28px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #2d2d42;
+      background: #1e1e2e;
+    }
+    .code-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: #16162a;
+      border-bottom: 1px solid #2d2d42;
+    }
+    .code-block-lang {
+      font-size: 12px;
+      font-weight: 500;
+      color: #7c7c9c;
+      font-family: 'Courier New', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .copy-btn {
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 500;
+      color: #9898b8;
+      background: #2d2d42;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .copy-btn:hover { background: #3a3a58; color: #c8c8e8; }
+    .copy-btn.copied { color: #5af78e; }
+    .copy-btn svg { flex-shrink: 0; }
+
+    pre {
+      margin: 0;
+      padding: 20px;
+      overflow-x: auto;
+      font-family: 'Courier New', 'Cascadia Code', 'Fira Code', monospace;
+      font-size: 13.5px;
+      line-height: 1.75;
+      color: #cdd6f4;
+      background: #1e1e2e;
+    }
+    pre::-webkit-scrollbar { height: 4px; }
+    pre::-webkit-scrollbar-track { background: #1e1e2e; }
+    pre::-webkit-scrollbar-thumb { background: #3a3a58; border-radius: 4px; }
+
+    /* Syntax tokens */
+    .tok-k  { color: #89b4fa; } /* keyword / property key */
+    .tok-s  { color: #a6e3a1; } /* string */
+    .tok-n  { color: #fab387; } /* number */
+    .tok-c  { color: #585b70; font-style: italic; } /* comment */
+    .tok-f  { color: #89dceb; } /* function / method */
+    .tok-p  { color: #cdd6f4; } /* punctuation */
+    .tok-t  { color: #f38ba8; } /* cli flag / type */
+    .tok-m  { color: #cba6f7; } /* module / command */
+
+    /* ─── CALLOUT ─────────────────────────────────────────────── */
+    .callout {
+      border-left: 3px solid var(--palette-blue-600);
+      background: #EBF1FF;
+      border-radius: 0 10px 10px 0;
+      padding: 18px 20px;
+      margin: 32px 0;
+    }
+    .callout-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--palette-blue-600);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .callout p {
+      font-size: 14px;
+      color: var(--palette-grey-900);
+      margin-bottom: 10px;
+    }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout a {
+      color: var(--palette-blue-600);
+      font-weight: 500;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .callout a:hover { opacity: 0.8; }
+    .callout ul { padding-left: 18px; margin-top: 6px; }
+    .callout ul li {
+      font-size: 14px;
+      color: var(--palette-grey-900);
+      margin-bottom: 4px;
+      line-height: 1.6;
+    }
+    .callout ul li a {
+      color: var(--palette-blue-600);
+      font-weight: 500;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    /* ─── ON THIS PAGE (TOC) ─────────────────────────────────── */
+    .docs-toc {
+      width: 200px;
+      flex-shrink: 0;
+    }
+    .docs-toc-inner {
+      position: sticky;
+      top: calc(var(--nav-height) + 32px);
+    }
+    .toc-title {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--palette-grey-800);
+      margin-bottom: 10px;
+    }
+    .toc-link {
+      display: block;
+      font-size: 13px;
+      color: var(--palette-grey-800);
+      padding: 4px 0 4px 12px;
+      border-left: 2px solid var(--palette-grey-100);
+      margin-bottom: 2px;
+      transition: color 0.12s, border-color 0.12s;
+      line-height: 1.4;
+    }
+    .toc-link:hover { color: var(--palette-grey-1200); border-color: var(--palette-grey-200); }
+    .toc-link.active { color: var(--palette-blue-600); border-color: var(--palette-blue-600); font-weight: 500; }
+
+    /* ─── RESPONSIVE ──────────────────────────────────────────── */
+    @media (max-width: 1200px) {
+      .docs-toc { display: none; }
+      .docs-content-wrap { max-width: var(--content-max); }
+    }
+
+    @media (max-width: 960px) {
+      :root { --page-margin: 40px; }
+    }
+
+    @media (max-width: 768px) {
+      :root { --page-margin: 16px; }
+
+      .nav { padding: 0 16px; gap: 0; }
+      .nav-links, .nav-actions { display: none; }
+      .nav-hamburger { display: flex; }
+
+      /* Sidebar hidden off-screen on mobile */
+      .sidebar {
+        transform: translateX(-100%);
+        z-index: 900;
+        width: 280px;
+        box-shadow: 4px 0 24px rgba(0,0,0,0.12);
+      }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.open { display: block; }
+
+      .docs-main { margin-left: 0; padding: 0 16px; }
+      .docs-content-wrap { padding: 24px 0 64px; }
+      .docs-article h1 { font-size: 28px; }
+    }
+
+    @media (max-width: 480px) {
+      .docs-article h1 { font-size: 24px; }
+      .docs-article h2 { font-size: 18px; }
+    }
+
+    /* ─── Mobile sidebar toggle banner ─────────────────────────── */
+    .mobile-sidebar-toggle {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--palette-grey-800);
+      background: var(--palette-grey-10);
+      border: 1px solid var(--palette-grey-100);
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      width: fit-content;
+    }
+    @media (max-width: 768px) {
+      .mobile-sidebar-toggle { display: flex; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAV ═══════════════════════════════════════════════════ -->
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">
+      <!-- Coffee cup SVG icon -->
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="28" height="28" rx="7" fill="#3279F9"/>
+        <!-- Cup body -->
+        <path d="M7 11h14l-1.5 9H8.5L7 11Z" fill="white" opacity="0.95"/>
+        <!-- Handle -->
+        <path d="M19.5 13.5 C22 13.5 22 17.5 19.5 17.5" stroke="white" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+        <!-- Steam left -->
+        <path d="M11 9 C11 7.5 12 7.5 12 6" stroke="white" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>
+        <!-- Steam right -->
+        <path d="M14.5 9 C14.5 7.5 15.5 7.5 15.5 6" stroke="white" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.7"/>
+        <!-- Saucer -->
+        <rect x="6" y="20.5" width="16" height="1.5" rx="0.75" fill="white" opacity="0.5"/>
+      </svg>
+      Mocha
+    </a>
+
+    <div class="nav-links">
+      <a href="index.html">Product</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="docs.html" class="active">Docs</a>
+      <a href="blog.html">Blog</a>
+      <a href="about.html">About</a>
+    </div>
+
+    <div class="nav-actions">
+      <button class="btn-ghost" onclick="location.href='#'">Sign in</button>
+      <button class="btn-primary" onclick="location.href='#'">Get started</button>
+    </div>
+
+    <!-- Hamburger for mobile -->
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ═══ DOCS LAYOUT ════════════════════════════════════════════ -->
+  <div class="docs-layout">
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ─── SIDEBAR ──────────────────────────────────────────── -->
+    <aside class="sidebar" id="sidebar" aria-label="Documentation navigation">
+
+      <!-- Getting Started -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Getting Started</div>
+        <a href="#introduction" class="sidebar-link">Introduction</a>
+        <a href="#quick-start" class="sidebar-link active">Quick Start</a>
+        <a href="#installation" class="sidebar-link">Installation</a>
+        <a href="#configuration" class="sidebar-link">Configuration</a>
+      </div>
+
+      <!-- Core Concepts -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Core Concepts</div>
+        <a href="#agents" class="sidebar-link">Agents</a>
+        <a href="#context-engine" class="sidebar-link">Context Engine</a>
+        <a href="#workflows" class="sidebar-link">Workflows</a>
+        <a href="#memory" class="sidebar-link">Memory</a>
+      </div>
+
+      <!-- API Reference -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">API Reference</div>
+        <a href="#authentication" class="sidebar-link">Authentication</a>
+        <a href="#endpoints" class="sidebar-link">Endpoints</a>
+        <a href="#rate-limits" class="sidebar-link">Rate Limits</a>
+        <a href="#webhooks" class="sidebar-link">Webhooks</a>
+      </div>
+
+      <!-- Guides -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Guides</div>
+        <a href="#first-agent" class="sidebar-link">Building Your First Agent</a>
+        <a href="#multi-agent" class="sidebar-link">Multi-Agent Workflows</a>
+        <a href="#deploy" class="sidebar-link">Deploying to Production</a>
+        <a href="#integrations" class="sidebar-link">Custom Integrations</a>
+      </div>
+
+      <!-- Resources -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Resources</div>
+        <a href="#changelog" class="sidebar-link">Changelog</a>
+        <a href="#status" class="sidebar-link">Status</a>
+        <a href="#community" class="sidebar-link">Community</a>
+      </div>
+
+    </aside>
+
+    <!-- ─── MAIN ─────────────────────────────────────────────── -->
+    <main class="docs-main">
+      <div class="docs-content-wrap">
+
+        <!-- ─── ARTICLE ─────────────────────────────────────── -->
+        <article class="docs-article">
+
+          <!-- Mobile: open sidebar button -->
+          <button class="mobile-sidebar-toggle" id="mobileSidebarBtn" aria-label="Open sidebar">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="1" y="3" width="14" height="1.5" rx="0.75" fill="currentColor"/>
+              <rect x="1" y="7.25" width="10" height="1.5" rx="0.75" fill="currentColor"/>
+              <rect x="1" y="11.5" width="12" height="1.5" rx="0.75" fill="currentColor"/>
+            </svg>
+            Menu
+          </button>
+
+          <!-- Breadcrumb -->
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="#">Getting Started</a>
+            <span>›</span>
+            <span class="current">Quick Start</span>
+          </nav>
+
+          <!-- Title -->
+          <h1 id="quick-start">Quick Start</h1>
+
+          <!-- Intro -->
+          <p>
+            Get up and running with Mocha in under five minutes. This guide walks you through installing the CLI, authenticating your account, creating your first agent, and running it — all from your terminal.
+          </p>
+          <p>
+            Before you begin, make sure you have <strong>Node.js 18+</strong> installed. Mocha agents run in any Node.js environment and deploy seamlessly to Mocha Cloud or your own infrastructure.
+          </p>
+
+          <hr />
+
+          <!-- Step 1 -->
+          <div class="step-label" id="step-1">
+            <span class="step-num">1</span>
+            Step 1
+          </div>
+          <h2>Install Mocha CLI</h2>
+          <p>
+            The Mocha CLI is the primary way to create, manage, and deploy agents. Install it globally via npm:
+          </p>
+
+          <div class="code-block-wrap">
+            <div class="code-block-header">
+              <span class="code-block-lang">bash</span>
+              <button class="copy-btn" data-code="npm install -g @mocha/cli" onclick="copyCode(this)">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><rect x="4" y="4" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M3 9H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre><span class="tok-m">npm</span> install -g <span class="tok-s">@mocha/cli</span></pre>
+          </div>
+
+          <p>
+            After installation, verify it's working by running <code style="font-family:monospace;background:var(--palette-grey-20);padding:2px 6px;border-radius:4px;font-size:13px;">mocha --version</code>. You should see the current CLI version printed to your terminal.
+          </p>
+
+          <!-- Step 2 -->
+          <div class="step-label" id="step-2">
+            <span class="step-num">2</span>
+            Step 2
+          </div>
+          <h2>Authenticate</h2>
+          <p>
+            Connect the CLI to your Mocha account. This stores a secure token in your local config so you don't need to log in again on subsequent commands.
+          </p>
+
+          <div class="code-block-wrap">
+            <div class="code-block-header">
+              <span class="code-block-lang">bash</span>
+              <button class="copy-btn" data-code="mocha auth login" onclick="copyCode(this)">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><rect x="4" y="4" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M3 9H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre><span class="tok-m">mocha</span> auth login</pre>
+          </div>
+
+          <p>
+            A browser window will open prompting you to sign in. Once authenticated, you'll see a confirmation in your terminal. If you're in a headless environment, use <code style="font-family:monospace;background:var(--palette-grey-20);padding:2px 6px;border-radius:4px;font-size:13px;">mocha auth login --token &lt;YOUR_API_KEY&gt;</code> instead.
+          </p>
+
+          <!-- Step 3 -->
+          <div class="step-label" id="step-3">
+            <span class="step-num">3</span>
+            Step 3
+          </div>
+          <h2>Create your first agent</h2>
+          <p>
+            Create a new file called <code style="font-family:monospace;background:var(--palette-grey-20);padding:2px 6px;border-radius:4px;font-size:13px;">my-agent.json</code> with the following configuration. This defines a simple agent with a name, model, system prompt, and the tools it can use.
+          </p>
+
+          <div class="code-block-wrap">
+            <div class="code-block-header">
+              <span class="code-block-lang">json</span>
+              <button class="copy-btn" onclick="copyCode(this)" data-code='{
+  "name": "my-agent",
+  "version": "1.0.0",
+  "model": "mocha-3-sonnet",
+  "system": "You are a helpful assistant. Answer questions clearly and concisely.",
+  "tools": ["web_search", "code_interpreter", "file_read"],
+  "memory": {
+    "enabled": true,
+    "strategy": "sliding_window",
+    "maxTokens": 8192
+  },
+  "config": {
+    "temperature": 0.7,
+    "maxSteps": 20,
+    "timeout": 30000
+  }
+}'>
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><rect x="4" y="4" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M3 9H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre><span class="tok-p">{</span>
+  <span class="tok-k">"name"</span><span class="tok-p">:</span> <span class="tok-s">"my-agent"</span><span class="tok-p">,</span>
+  <span class="tok-k">"version"</span><span class="tok-p">:</span> <span class="tok-s">"1.0.0"</span><span class="tok-p">,</span>
+  <span class="tok-k">"model"</span><span class="tok-p">:</span> <span class="tok-s">"mocha-3-sonnet"</span><span class="tok-p">,</span>
+  <span class="tok-k">"system"</span><span class="tok-p">:</span> <span class="tok-s">"You are a helpful assistant. Answer questions clearly and concisely."</span><span class="tok-p">,</span>
+  <span class="tok-k">"tools"</span><span class="tok-p">:</span> <span class="tok-p">[</span><span class="tok-s">"web_search"</span><span class="tok-p">,</span> <span class="tok-s">"code_interpreter"</span><span class="tok-p">,</span> <span class="tok-s">"file_read"</span><span class="tok-p">],</span>
+  <span class="tok-k">"memory"</span><span class="tok-p">:</span> <span class="tok-p">{</span>
+    <span class="tok-k">"enabled"</span><span class="tok-p">:</span> <span class="tok-n">true</span><span class="tok-p">,</span>
+    <span class="tok-k">"strategy"</span><span class="tok-p">:</span> <span class="tok-s">"sliding_window"</span><span class="tok-p">,</span>
+    <span class="tok-k">"maxTokens"</span><span class="tok-p">:</span> <span class="tok-n">8192</span>
+  <span class="tok-p">},</span>
+  <span class="tok-k">"config"</span><span class="tok-p">:</span> <span class="tok-p">{</span>
+    <span class="tok-k">"temperature"</span><span class="tok-p">:</span> <span class="tok-n">0.7</span><span class="tok-p">,</span>
+    <span class="tok-k">"maxSteps"</span><span class="tok-p">:</span> <span class="tok-n">20</span><span class="tok-p">,</span>
+    <span class="tok-k">"timeout"</span><span class="tok-p">:</span> <span class="tok-n">30000</span>
+  <span class="tok-p">}</span>
+<span class="tok-p">}</span></pre>
+          </div>
+
+          <p>
+            The <code style="font-family:monospace;background:var(--palette-grey-20);padding:2px 6px;border-radius:4px;font-size:13px;">tools</code> array specifies which built-in Mocha tools your agent can access. The <code style="font-family:monospace;background:var(--palette-grey-20);padding:2px 6px;border-radius:4px;font-size:13px;">memory</code> block enables persistent context across turns using a sliding-window strategy.
+          </p>
+
+          <!-- Step 4 -->
+          <div class="step-label" id="step-4">
+            <span class="step-num">4</span>
+            Step 4
+          </div>
+          <h2>Run your agent</h2>
+          <p>
+            With your config saved, start your agent interactively from the command line. Mocha will load your configuration, initialize the context engine, and open a REPL session:
+          </p>
+
+          <div class="code-block-wrap">
+            <div class="code-block-header">
+              <span class="code-block-lang">bash</span>
+              <button class="copy-btn" data-code="mocha run my-agent" onclick="copyCode(this)">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><rect x="4" y="4" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M3 9H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                Copy
+              </button>
+            </div>
+            <pre><span class="tok-m">mocha</span> run <span class="tok-s">my-agent</span>
+
+<span class="tok-c"># Expected output:</span>
+<span class="tok-c"># ✓ Loaded agent config: my-agent v1.0.0</span>
+<span class="tok-c"># ✓ Context engine initialized (sliding_window, 8192 tokens)</span>
+<span class="tok-c"># ✓ Tools registered: web_search, code_interpreter, file_read</span>
+<span class="tok-c"># ● Agent ready. Type your message below or Ctrl+C to exit.</span>
+<span class="tok-c"># &gt;</span></pre>
+          </div>
+
+          <p>
+            You can also run your agent non-interactively by passing a prompt directly: <code style="font-family:monospace;background:var(--palette-grey-20);padding:2px 6px;border-radius:4px;font-size:13px;">mocha run my-agent --prompt "Summarize the latest AI news"</code>
+          </p>
+
+          <!-- Callout: Next Steps -->
+          <div class="callout" role="note">
+            <div class="callout-title">
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><path d="M7.5 1.5a6 6 0 1 1 0 12 6 6 0 0 1 0-12Zm0 4.5v4m0-5.5v.5" stroke="#3279F9" stroke-width="1.5" stroke-linecap="round"/></svg>
+              Next steps
+            </div>
+            <p>Your agent is running — here's where to go from here:</p>
+            <ul>
+              <li>Learn about <a href="#agents">Agents</a> — system prompts, tool use, and lifecycle management</li>
+              <li>Explore <a href="#workflows">Workflows</a> — chain agents together for complex multi-step tasks</li>
+              <li>Add persistent memory with the <a href="#memory">Memory</a> module</li>
+              <li>Deploy to production with <code style="font-family:monospace;font-size:13px;">mocha deploy my-agent</code> — see <a href="#deploy">Deploying to Production</a></li>
+            </ul>
+          </div>
+
+        </article>
+
+        <!-- ─── ON THIS PAGE TOC ──────────────────────────────── -->
+        <aside class="docs-toc" aria-label="On this page">
+          <div class="docs-toc-inner">
+            <div class="toc-title">On this page</div>
+            <a href="#step-1" class="toc-link" id="toc-step-1">Install Mocha CLI</a>
+            <a href="#step-2" class="toc-link" id="toc-step-2">Authenticate</a>
+            <a href="#step-3" class="toc-link" id="toc-step-3">Create your first agent</a>
+            <a href="#step-4" class="toc-link" id="toc-step-4">Run your agent</a>
+          </div>
+        </aside>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ═══ SCRIPTS ════════════════════════════════════════════════ -->
+  <script>
+    // ─── Copy button ─────────────────────────────────────────────
+    function copyCode(btn) {
+      const code = btn.getAttribute('data-code') || btn.closest('.code-block-wrap').querySelector('pre').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const original = btn.innerHTML;
+        btn.classList.add('copied');
+        btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M2 7l3.5 3.5L11 3" stroke="#5af78e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Copied!`;
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.innerHTML = original;
+        }, 2000);
+      });
+    }
+
+    // ─── Mobile sidebar toggle ────────────────────────────────────
+    const sidebar        = document.getElementById('sidebar');
+    const overlay        = document.getElementById('sidebarOverlay');
+    const hamburger      = document.getElementById('navHamburger');
+    const mobileSidebarBtn = document.getElementById('mobileSidebarBtn');
+
+    function openSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('open');
+      hamburger.classList.add('open');
+      hamburger.setAttribute('aria-expanded', 'true');
+    }
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('open');
+      hamburger.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+    }
+
+    hamburger.addEventListener('click', () => {
+      sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+    });
+    mobileSidebarBtn.addEventListener('click', openSidebar);
+    overlay.addEventListener('click', closeSidebar);
+
+    // Close sidebar on sidebar link click (mobile)
+    sidebar.querySelectorAll('.sidebar-link').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) closeSidebar();
+      });
+    });
+
+    // ─── TOC active link on scroll ────────────────────────────────
+    const tocSections = [
+      { id: 'step-1', tocId: 'toc-step-1' },
+      { id: 'step-2', tocId: 'toc-step-2' },
+      { id: 'step-3', tocId: 'toc-step-3' },
+      { id: 'step-4', tocId: 'toc-step-4' },
+    ];
+
+    function updateToc() {
+      const scrollY = window.scrollY + 100;
+      let current = tocSections[0].tocId;
+
+      tocSections.forEach(({ id, tocId }) => {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top + window.scrollY <= scrollY) {
+          current = tocId;
+        }
+      });
+
+      document.querySelectorAll('.toc-link').forEach(link => link.classList.remove('active'));
+      const active = document.getElementById(current);
+      if (active) active.classList.add('active');
+    }
+
+    window.addEventListener('scroll', updateToc, { passive: true });
+    updateToc();
+  </script>
+</body>
+</html>

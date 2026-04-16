@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — Mocha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,slnt,wdth,wght,ROND@8..144,-10..0,25..150,400..500,0..100&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Design tokens ─────────────────────────────────────── */
+    :root {
+      --palette-grey-0:    #FFFFFF;
+      --palette-grey-10:   #F8F9FC;
+      --palette-grey-20:   #EFF2F7;
+      --palette-grey-50:   #E6EAF0;
+      --palette-grey-100:  #E1E6EC;
+      --palette-grey-200:  #CDD4DC;
+      --palette-grey-800:  #45474D;
+      --palette-grey-900:  #2F3034;
+      --palette-grey-1200: #121317;
+      --palette-blue-600:  #3279F9;
+
+      --nav-height: 64px;
+      --page-margin: 72px;
+
+      --font: 'Google Sans Flex', 'Google Sans', system-ui, sans-serif;
+    }
+
+    /* ── Reset ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--palette-grey-0);
+      color: var(--palette-grey-900);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ── Layout helpers ────────────────────────────────────── */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 var(--page-margin);
+    }
+
+    /* ════════════════════════════════════════════════════════
+       NAV
+    ════════════════════════════════════════════════════════ */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: var(--nav-height);
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--palette-grey-100);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      gap: 0;
+    }
+
+    /* Logo */
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--palette-grey-1200);
+      letter-spacing: -0.02em;
+      flex-shrink: 0;
+      margin-right: 40px;
+    }
+
+    .nav-logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    /* Links */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+      flex: 1;
+    }
+
+    .nav-links a {
+      display: block;
+      padding: 6px 12px;
+      font-size: 14px;
+      font-weight: 450;
+      color: var(--palette-grey-800);
+      border-radius: 8px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .nav-links a:hover {
+      background: var(--palette-grey-20);
+      color: var(--palette-grey-1200);
+    }
+
+    /* CTA buttons */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .btn-ghost {
+      padding: 8px 16px;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 450;
+      color: var(--palette-grey-900);
+      background: transparent;
+      border: 1px solid var(--palette-grey-200);
+      border-radius: 100px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-ghost:hover {
+      background: var(--palette-grey-20);
+      border-color: var(--palette-grey-200);
+    }
+
+    .btn-primary {
+      padding: 8px 18px;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      background: var(--palette-blue-600);
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: opacity 0.15s, box-shadow 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.88;
+      box-shadow: 0 4px 14px rgba(50, 121, 249, 0.35);
+    }
+
+    /* ════════════════════════════════════════════════════════
+       PAGE WRAPPER
+    ════════════════════════════════════════════════════════ */
+    .page {
+      padding-top: var(--nav-height);
+    }
+
+    /* ════════════════════════════════════════════════════════
+       HERO
+    ════════════════════════════════════════════════════════ */
+    .hero {
+      text-align: center;
+      padding: 80px var(--page-margin) 64px;
+      background: var(--palette-grey-0);
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--palette-blue-600);
+      margin-bottom: 20px;
+    }
+
+    .hero-title {
+      font-size: clamp(40px, 5vw, 64px);
+      font-weight: 500;
+      letter-spacing: -0.035em;
+      line-height: 1.05;
+      color: var(--palette-grey-1200);
+      margin-bottom: 20px;
+    }
+
+    .hero-subtitle {
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--palette-grey-800);
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ════════════════════════════════════════════════════════
+       TWO-COLUMN SECTION
+    ════════════════════════════════════════════════════════ */
+    .contact-section {
+      padding: 0 var(--page-margin) 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 48px;
+      align-items: start;
+    }
+
+    /* ── FORM COLUMN ────────────────────────────────────── */
+    .form-card {
+      background: var(--palette-grey-0);
+      border: 1px solid var(--palette-grey-100);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 2px 12px rgba(18, 19, 23, 0.05);
+    }
+
+    .form-card-title {
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--palette-grey-1200);
+      margin-bottom: 28px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+
+    .form-group:last-of-type {
+      margin-bottom: 0;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--palette-grey-900);
+    }
+
+    label .optional {
+      font-weight: 400;
+      color: var(--palette-grey-200);
+      margin-left: 4px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    select,
+    textarea {
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--palette-grey-1200);
+      background: var(--palette-grey-10);
+      border: 1px solid var(--palette-grey-100);
+      border-radius: 10px;
+      padding: 11px 14px;
+      width: 100%;
+      transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+      outline: none;
+      appearance: none;
+    }
+
+    input[type="text"]:hover,
+    input[type="email"]:hover,
+    select:hover,
+    textarea:hover {
+      border-color: var(--palette-grey-200);
+      background: var(--palette-grey-0);
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--palette-blue-600);
+      background: var(--palette-grey-0);
+      box-shadow: 0 0 0 3px rgba(50, 121, 249, 0.15);
+    }
+
+    /* Select arrow */
+    .select-wrapper {
+      position: relative;
+    }
+
+    .select-wrapper select {
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    .select-wrapper::after {
+      content: '';
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 5px solid var(--palette-grey-800);
+      pointer-events: none;
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+
+    /* Error state */
+    .field-error input,
+    .field-error select,
+    .field-error textarea {
+      border-color: #E53935;
+      background: #FFF5F5;
+      box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.12);
+    }
+
+    .error-msg {
+      font-size: 12px;
+      color: #E53935;
+      display: none;
+      margin-top: 2px;
+    }
+
+    .field-error .error-msg {
+      display: block;
+    }
+
+    /* Submit button */
+    .btn-submit {
+      width: 100%;
+      margin-top: 24px;
+      padding: 13px 24px;
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 500;
+      color: #fff;
+      background: var(--palette-blue-600);
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: opacity 0.15s, box-shadow 0.15s, transform 0.1s;
+    }
+
+    .btn-submit:hover {
+      opacity: 0.88;
+      box-shadow: 0 6px 20px rgba(50, 121, 249, 0.4);
+    }
+
+    .btn-submit:active {
+      transform: scale(0.98);
+    }
+
+    /* ── SUCCESS STATE ───────────────────────────────────── */
+    .success-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 48px 24px;
+      gap: 16px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .success-state.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      background: #E8F5E9;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .success-icon svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .success-title {
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--palette-grey-1200);
+      letter-spacing: -0.02em;
+    }
+
+    .success-sub {
+      font-size: 15px;
+      color: var(--palette-grey-800);
+      max-width: 320px;
+      line-height: 1.6;
+    }
+
+    /* ── INFO COLUMN ────────────────────────────────────── */
+    .info-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .info-heading {
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--palette-grey-1200);
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+
+    /* Contact method cards */
+    .contact-card {
+      background: var(--palette-grey-0);
+      border: 1px solid var(--palette-grey-100);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      cursor: default;
+    }
+
+    .contact-card:hover {
+      border-color: var(--palette-blue-600);
+      box-shadow: 0 4px 20px rgba(50, 121, 249, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--palette-grey-20);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .card-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .card-label {
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--palette-grey-800);
+      margin-bottom: 3px;
+    }
+
+    .card-value {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--palette-grey-1200);
+      word-break: break-all;
+    }
+
+    .card-value a {
+      color: var(--palette-blue-600);
+      transition: opacity 0.15s;
+    }
+
+    .card-value a:hover { opacity: 0.75; }
+
+    .card-sub {
+      font-size: 13px;
+      color: var(--palette-grey-800);
+      margin-top: 2px;
+      line-height: 1.45;
+    }
+
+    .card-btn {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 14px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--palette-blue-600);
+      background: rgba(50, 121, 249, 0.08);
+      border: none;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .card-btn:hover {
+      background: rgba(50, 121, 249, 0.15);
+    }
+
+    /* Office card */
+    .office-card {
+      background: var(--palette-grey-10);
+      border: 1px solid var(--palette-grey-100);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .office-card:hover {
+      border-color: var(--palette-grey-200);
+      box-shadow: 0 4px 16px rgba(18, 19, 23, 0.06);
+    }
+
+    .office-pin {
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      color: var(--palette-blue-600);
+    }
+
+    .office-text strong {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--palette-grey-1200);
+      display: block;
+    }
+
+    .office-text span {
+      font-size: 13px;
+      color: var(--palette-grey-800);
+    }
+
+    /* Response time */
+    .response-note {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      background: rgba(50, 121, 249, 0.06);
+      border: 1px solid rgba(50, 121, 249, 0.18);
+      border-radius: 12px;
+    }
+
+    .response-note-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #2ECC71;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.25);
+    }
+
+    .response-note-text {
+      font-size: 13px;
+      color: var(--palette-grey-800);
+    }
+
+    .response-note-text strong {
+      color: var(--palette-grey-1200);
+      font-weight: 500;
+    }
+
+    /* ════════════════════════════════════════════════════════
+       ENTERPRISE SECTION
+    ════════════════════════════════════════════════════════ */
+    .enterprise {
+      background: var(--palette-grey-10);
+      border-top: 1px solid var(--palette-grey-100);
+      border-bottom: 1px solid var(--palette-grey-100);
+      padding: 72px var(--page-margin);
+      text-align: center;
+    }
+
+    .enterprise-inner {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .enterprise-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--palette-grey-800);
+      background: var(--palette-grey-50);
+      border: 1px solid var(--palette-grey-200);
+      border-radius: 100px;
+      margin-bottom: 20px;
+    }
+
+    .enterprise-title {
+      font-size: clamp(28px, 3.5vw, 42px);
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--palette-grey-1200);
+      margin-bottom: 14px;
+    }
+
+    .enterprise-sub {
+      font-size: 16px;
+      color: var(--palette-grey-800);
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .btn-outline {
+      display: inline-block;
+      padding: 13px 28px;
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--palette-grey-1200);
+      background: transparent;
+      border: 1.5px solid var(--palette-grey-200);
+      border-radius: 100px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, color 0.2s;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--palette-grey-900);
+      background: var(--palette-grey-1200);
+      color: #fff;
+    }
+
+    /* ════════════════════════════════════════════════════════
+       FOOTER
+    ════════════════════════════════════════════════════════ */
+    .footer {
+      background: var(--palette-grey-1200);
+      padding: 56px var(--page-margin) 40px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 40px;
+      margin-bottom: 48px;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+
+    .footer-logo svg {
+      width: 26px;
+      height: 26px;
+      opacity: 0.9;
+    }
+
+    .footer-tagline {
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      margin-top: 6px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 32px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 14px;
+      color: rgba(255,255,255,0.55);
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover {
+      color: #fff;
+    }
+
+    .footer-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      margin-bottom: 28px;
+    }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-copy {
+      font-size: 13px;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 16px;
+    }
+
+    .footer-social a {
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      transition: color 0.15s;
+    }
+
+    .footer-social a:hover {
+      color: #fff;
+    }
+
+    /* ════════════════════════════════════════════════════════
+       RESPONSIVE
+    ════════════════════════════════════════════════════════ */
+    @media (max-width: 900px) {
+      :root { --page-margin: 40px; }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .info-col {
+        order: -1;
+      }
+    }
+
+    @media (max-width: 600px) {
+      :root { --page-margin: 16px; }
+
+      .nav-links { display: none; }
+
+      .hero { padding: 48px var(--page-margin) 40px; }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-card { padding: 24px; }
+
+      .footer-top {
+        flex-direction: column;
+      }
+
+      .footer-links {
+        gap: 8px 20px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════════════
+       NAV
+  ══════════════════════════════════════════════════════ -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo">
+        <!-- Coffee cup SVG -->
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="28" height="28" rx="8" fill="#3279F9"/>
+          <path d="M8 10h12l-1.5 9A1 1 0 0 1 17.5 20h-7a1 1 0 0 1-.997-.927L8 10Z" fill="white"/>
+          <path d="M20 12h1.5a1.5 1.5 0 0 1 0 3H20" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M11 7.5C11 7.5 11.5 6 13 6s2 1.5 3.5 1.5" stroke="white" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+        Mocha
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="index.html">Product</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        <li><a href="docs.html">Docs</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="btn-ghost">Sign in</button>
+        <button class="btn-primary">Get started</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════════════
+       PAGE
+  ══════════════════════════════════════════════════════ -->
+  <main class="page">
+
+    <!-- HERO -->
+    <section class="hero">
+      <span class="hero-eyebrow">Contact</span>
+      <h1 class="hero-title">Get in touch</h1>
+      <p class="hero-subtitle">We'd love to hear from you. Our team typically responds within one business day.</p>
+    </section>
+
+    <!-- TWO-COLUMN CONTACT -->
+    <section class="contact-section">
+      <div class="contact-grid">
+
+        <!-- LEFT: Form -->
+        <div class="form-card">
+          <h2 class="form-card-title">Send us a message</h2>
+
+          <form id="contactForm" novalidate>
+
+            <!-- First + Last name -->
+            <div class="form-row">
+              <div class="form-group" id="group-firstName">
+                <label for="firstName">First name</label>
+                <input type="text" id="firstName" name="firstName" placeholder="Alex" autocomplete="given-name" />
+                <span class="error-msg">First name is required.</span>
+              </div>
+              <div class="form-group" id="group-lastName">
+                <label for="lastName">Last name</label>
+                <input type="text" id="lastName" name="lastName" placeholder="Rivera" autocomplete="family-name" />
+                <span class="error-msg">Last name is required.</span>
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group" id="group-email">
+              <label for="email">Email address</label>
+              <input type="email" id="email" name="email" placeholder="alex@company.com" autocomplete="email" />
+              <span class="error-msg">A valid email address is required.</span>
+            </div>
+
+            <!-- Company -->
+            <div class="form-group">
+              <label for="company">Company <span class="optional">(optional)</span></label>
+              <input type="text" id="company" name="company" placeholder="Acme Corp" autocomplete="organization" />
+            </div>
+
+            <!-- Subject -->
+            <div class="form-group" id="group-subject">
+              <label for="subject">Subject</label>
+              <div class="select-wrapper">
+                <select id="subject" name="subject">
+                  <option value="">Select a topic…</option>
+                  <option value="general">General inquiry</option>
+                  <option value="sales">Sales</option>
+                  <option value="support">Technical support</option>
+                  <option value="press">Press</option>
+                  <option value="partnership">Partnership</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <span class="error-msg">Please select a subject.</span>
+            </div>
+
+            <!-- Message -->
+            <div class="form-group" id="group-message">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" placeholder="Tell us what's on your mind…"></textarea>
+              <span class="error-msg">Message is required.</span>
+            </div>
+
+            <button type="submit" class="btn-submit">Send message</button>
+          </form>
+
+          <!-- Success state -->
+          <div class="success-state" id="successState">
+            <div class="success-icon">
+              <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="16" cy="16" r="16" fill="#4CAF50" opacity="0.15"/>
+                <path d="M9 16.5l5 5 9-9" stroke="#2E7D32" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <p class="success-title">Thanks for reaching out!</p>
+            <p class="success-sub">We'll be in touch soon — usually within one business day.</p>
+          </div>
+        </div>
+
+        <!-- RIGHT: Contact info -->
+        <aside class="info-col">
+          <p class="info-heading">Other ways to reach us</p>
+
+          <!-- Email -->
+          <div class="contact-card">
+            <div class="card-icon">📧</div>
+            <div class="card-body">
+              <p class="card-label">Email</p>
+              <p class="card-value"><a href="mailto:hello@mocha.dev">hello@mocha.dev</a></p>
+            </div>
+          </div>
+
+          <!-- Live chat -->
+          <div class="contact-card">
+            <div class="card-icon">💬</div>
+            <div class="card-body">
+              <p class="card-label">Live chat</p>
+              <p class="card-value">Chat with our team</p>
+              <p class="card-sub">Available Mon–Fri, 9am–6pm PST</p>
+              <button class="card-btn">Start chat</button>
+            </div>
+          </div>
+
+          <!-- Twitter/X -->
+          <div class="contact-card">
+            <div class="card-icon">𝕏</div>
+            <div class="card-body">
+              <p class="card-label">Twitter / X</p>
+              <p class="card-value"><a href="https://twitter.com/MochaDev" target="_blank" rel="noopener">@MochaDev</a></p>
+              <p class="card-sub">DMs open for quick questions</p>
+            </div>
+          </div>
+
+          <!-- Docs -->
+          <div class="contact-card">
+            <div class="card-icon">📖</div>
+            <div class="card-body">
+              <p class="card-label">Documentation</p>
+              <p class="card-value">Self-serve answers</p>
+              <p class="card-sub">Find answers in our docs</p>
+              <a href="docs.html" class="card-btn">Browse docs</a>
+            </div>
+          </div>
+
+          <!-- Office -->
+          <div class="office-card">
+            <svg class="office-pin" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="19" cy="16" r="5" stroke="#3279F9" stroke-width="2"/>
+              <path d="M19 6C13.477 6 9 10.477 9 16c0 7.5 10 18 10 18s10-10.5 10-18c0-5.523-4.477-10-10-10Z" stroke="#3279F9" stroke-width="2"/>
+            </svg>
+            <div class="office-text">
+              <strong>San Francisco, CA</strong>
+              <span>340 Pine Street, Suite 800</span>
+            </div>
+          </div>
+
+          <!-- Response time -->
+          <div class="response-note">
+            <div class="response-note-dot"></div>
+            <p class="response-note-text">
+              <strong>Average response time:</strong> &lt; 4 hours
+            </p>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- ENTERPRISE BAND -->
+    <section class="enterprise">
+      <div class="enterprise-inner">
+        <div class="enterprise-badge">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M7 1l1.8 3.6L13 5.3l-3 2.9.7 4.1L7 10.5l-3.7 1.8.7-4.1-3-2.9 4.2-.7L7 1Z" fill="currentColor"/>
+          </svg>
+          Enterprise
+        </div>
+        <h2 class="enterprise-title">Looking for enterprise?</h2>
+        <p class="enterprise-sub">Get a custom demo, dedicated support, and SLA guarantees. We'll build a plan that fits your team.</p>
+        <button class="btn-outline">Contact sales</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div>
+          <a href="index.html" class="footer-logo">
+            <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="28" height="28" rx="8" fill="#3279F9"/>
+              <path d="M8 10h12l-1.5 9A1 1 0 0 1 17.5 20h-7a1 1 0 0 1-.997-.927L8 10Z" fill="white"/>
+              <path d="M20 12h1.5a1.5 1.5 0 0 1 0 3H20" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M11 7.5C11 7.5 11.5 6 13 6s2 1.5 3.5 1.5" stroke="white" stroke-width="1.3" stroke-linecap="round"/>
+            </svg>
+            Mocha
+          </a>
+          <p class="footer-tagline">Agentic development, reimagined.</p>
+        </div>
+
+        <ul class="footer-links">
+          <li><a href="index.html">Product</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="docs.html">Docs</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="https://github.com/mochadev" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://twitter.com/MochaDev" target="_blank" rel="noopener">Twitter</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-divider"></div>
+
+      <div class="footer-bottom">
+        <p class="footer-copy">&copy; 2026 Mocha, Inc. All rights reserved.</p>
+        <div class="footer-social">
+          <a href="https://github.com/mochadev" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://twitter.com/MochaDev" target="_blank" rel="noopener">Twitter</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════════════════════════════
+       JS — FORM VALIDATION & SUCCESS STATE
+  ══════════════════════════════════════════════════════ -->
+  <script>
+    (function () {
+      const form = document.getElementById('contactForm');
+      const successState = document.getElementById('successState');
+
+      // Fields to validate: [inputId, groupId, validator fn]
+      const fields = [
+        {
+          id: 'firstName',
+          groupId: 'group-firstName',
+          validate: (v) => v.trim().length > 0,
+        },
+        {
+          id: 'lastName',
+          groupId: 'group-lastName',
+          validate: (v) => v.trim().length > 0,
+        },
+        {
+          id: 'email',
+          groupId: 'group-email',
+          validate: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
+        },
+        {
+          id: 'subject',
+          groupId: 'group-subject',
+          validate: (v) => v !== '',
+        },
+        {
+          id: 'message',
+          groupId: 'group-message',
+          validate: (v) => v.trim().length > 0,
+        },
+      ];
+
+      function setError(field, hasError) {
+        const group = document.getElementById(field.groupId);
+        if (hasError) {
+          group.classList.add('field-error');
+        } else {
+          group.classList.remove('field-error');
+        }
+      }
+
+      // Live clear on input
+      fields.forEach((field) => {
+        const el = document.getElementById(field.id);
+        if (!el) return;
+        const eventType = el.tagName === 'SELECT' ? 'change' : 'input';
+        el.addEventListener(eventType, () => {
+          if (field.validate(el.value)) {
+            setError(field, false);
+          }
+        });
+      });
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        let valid = true;
+
+        fields.forEach((field) => {
+          const el = document.getElementById(field.id);
+          const ok = field.validate(el.value);
+          setError(field, !ok);
+          if (!ok) valid = false;
+        });
+
+        if (!valid) return;
+
+        // Simulate submission — hide form, show success
+        form.style.transition = 'opacity 0.3s ease';
+        form.style.opacity = '0';
+
+        setTimeout(() => {
+          form.style.display = 'none';
+          successState.style.display = 'flex';
+
+          // Trigger animation on next frame
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              successState.classList.add('visible');
+            });
+          });
+        }, 300);
+      });
+    })();
+  </script>
+
+</body>
+</html>

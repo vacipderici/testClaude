@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pricing — Mocha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,slnt,wdth,wght,ROND@8..144,-10..0,25..150,400..500,0..100&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Design Tokens ─────────────────────────────────────── */
+    :root {
+      --palette-grey-0:    #FFFFFF;
+      --palette-grey-10:   #F8F9FC;
+      --palette-grey-20:   #EFF2F7;
+      --palette-grey-50:   #E6EAF0;
+      --palette-grey-100:  #E1E6EC;
+      --palette-grey-200:  #CDD4DC;
+      --palette-grey-800:  #45474D;
+      --palette-grey-900:  #2F3034;
+      --palette-grey-1000: #212226;
+      --palette-grey-1100: #18191D;
+      --palette-grey-1200: #121317;
+      --palette-blue-600:  #3279F9;
+
+      --space-xs:  4px;
+      --space-sm:  8px;
+      --space-md:  16px;
+      --space-lg:  24px;
+      --space-xl:  36px;
+      --space-2xl: 48px;
+      --space-3xl: 60px;
+      --space-4xl: 80px;
+
+      --shape-corner-sm:      8px;
+      --shape-corner-md:      16px;
+      --shape-corner-lg:      24px;
+      --shape-corner-rounded: 9999px;
+
+      --nav-height:   64px;
+      --page-margin:  72px;
+    }
+
+    /* ─── Reset ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Google Sans Flex', 'Google Sans', sans-serif;
+      background: var(--palette-grey-0);
+      color: var(--palette-grey-900);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ─── Nav ───────────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav-height);
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--palette-grey-100);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      padding: 0 var(--page-margin);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      gap: var(--space-lg);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--palette-grey-1100);
+      letter-spacing: -0.02em;
+      flex-shrink: 0;
+    }
+
+    .nav-logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      margin-left: var(--space-lg);
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--palette-grey-800);
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--shape-corner-sm);
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .nav-links a:hover {
+      color: var(--palette-grey-1100);
+      background: var(--palette-grey-20);
+    }
+
+    .nav-links a.active {
+      color: var(--palette-grey-1100);
+      font-weight: 500;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin-left: auto;
+    }
+
+    .btn-ghost {
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--palette-grey-900);
+      background: transparent;
+      border: 1px solid var(--palette-grey-200);
+      border-radius: var(--shape-corner-rounded);
+      padding: 7px var(--space-md);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .btn-ghost:hover {
+      background: var(--palette-grey-20);
+      border-color: var(--palette-grey-200);
+    }
+
+    .btn-primary {
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      background: var(--palette-blue-600);
+      border: none;
+      border-radius: var(--shape-corner-rounded);
+      padding: 8px 18px;
+      cursor: pointer;
+      transition: filter 0.15s, transform 0.1s;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.1);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    /* ─── Page wrapper ──────────────────────────────────────── */
+    .page {
+      padding-top: var(--nav-height);
+    }
+
+    .container {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 var(--page-margin);
+    }
+
+    /* ─── Hero ──────────────────────────────────────────────── */
+    .pricing-hero {
+      text-align: center;
+      padding: var(--space-4xl) 0 var(--space-3xl);
+    }
+
+    .pricing-hero h1 {
+      font-size: clamp(36px, 5vw, 56px);
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      color: var(--palette-grey-1100);
+      line-height: 1.1;
+      margin-bottom: var(--space-md);
+    }
+
+    .pricing-hero p {
+      font-size: 20px;
+      color: var(--palette-grey-800);
+      font-weight: 400;
+    }
+
+    /* ─── Toggle ────────────────────────────────────────────── */
+    .billing-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-md);
+      margin-bottom: var(--space-3xl);
+    }
+
+    .toggle-label {
+      font-size: 15px;
+      color: var(--palette-grey-800);
+      cursor: pointer;
+      transition: color 0.15s;
+      user-select: none;
+    }
+
+    .toggle-label.active {
+      color: var(--palette-grey-1100);
+      font-weight: 500;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 44px;
+      height: 26px;
+      cursor: pointer;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      background: var(--palette-grey-200);
+      border-radius: var(--shape-corner-rounded);
+      transition: background 0.2s;
+    }
+
+    .toggle-switch input:checked + .toggle-track {
+      background: var(--palette-blue-600);
+    }
+
+    .toggle-thumb {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .toggle-switch input:checked ~ .toggle-thumb {
+      transform: translateX(18px);
+    }
+
+    .annual-badge {
+      display: inline-flex;
+      align-items: center;
+      background: #e8f0fe;
+      color: var(--palette-blue-600);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 2px var(--space-sm);
+      border-radius: var(--shape-corner-rounded);
+      letter-spacing: 0.01em;
+    }
+
+    /* ─── Pricing Cards ─────────────────────────────────────── */
+    .pricing-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+      margin-bottom: var(--space-4xl);
+      align-items: start;
+    }
+
+    .pricing-card {
+      background: var(--palette-grey-0);
+      border: 1px solid var(--palette-grey-100);
+      border-radius: var(--shape-corner-lg);
+      padding: var(--space-2xl) var(--space-xl);
+      position: relative;
+      transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+    }
+
+    .pricing-card:hover {
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .pricing-card.pro {
+      border: 2px solid var(--palette-blue-600);
+      box-shadow: 0 0 0 4px rgba(50, 121, 249, 0.08), 0 4px 24px rgba(50, 121, 249, 0.12);
+    }
+
+    .pricing-card.pro:hover {
+      box-shadow: 0 0 0 4px rgba(50, 121, 249, 0.12), 0 12px 40px rgba(50, 121, 249, 0.18);
+      transform: translateY(-3px);
+    }
+
+    .popular-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--palette-blue-600);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 14px;
+      border-radius: var(--shape-corner-rounded);
+      white-space: nowrap;
+      letter-spacing: 0.02em;
+    }
+
+    .card-tier {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--palette-blue-600);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: var(--space-xs);
+    }
+
+    .card-tier.free { color: var(--palette-grey-800); }
+    .card-tier.team { color: var(--palette-grey-800); }
+
+    .card-name {
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--palette-grey-1100);
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-xs);
+    }
+
+    .card-description {
+      font-size: 14px;
+      color: var(--palette-grey-800);
+      margin-bottom: var(--space-xl);
+      min-height: 40px;
+    }
+
+    .card-price {
+      margin-bottom: var(--space-lg);
+    }
+
+    .price-amount {
+      font-size: 48px;
+      font-weight: 500;
+      color: var(--palette-grey-1100);
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .price-currency {
+      font-size: 24px;
+      font-weight: 400;
+      vertical-align: top;
+      line-height: 1.6;
+      color: var(--palette-grey-800);
+    }
+
+    .price-period {
+      font-size: 14px;
+      color: var(--palette-grey-800);
+      margin-top: var(--space-xs);
+    }
+
+    .price-original {
+      font-size: 13px;
+      color: var(--palette-grey-200);
+      text-decoration: line-through;
+      margin-top: 2px;
+      min-height: 18px;
+    }
+
+    .card-cta {
+      display: block;
+      width: 100%;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 500;
+      text-align: center;
+      padding: 11px var(--space-md);
+      border-radius: var(--shape-corner-rounded);
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-bottom: var(--space-xl);
+    }
+
+    .card-cta.ghost {
+      background: transparent;
+      border: 1px solid var(--palette-grey-200);
+      color: var(--palette-grey-900);
+    }
+
+    .card-cta.ghost:hover {
+      background: var(--palette-grey-10);
+      border-color: var(--palette-grey-200);
+    }
+
+    .card-cta.filled {
+      background: var(--palette-blue-600);
+      border: none;
+      color: #fff;
+    }
+
+    .card-cta.filled:hover {
+      filter: brightness(1.1);
+    }
+
+    .card-cta:active { transform: scale(0.98); }
+
+    .card-divider {
+      height: 1px;
+      background: var(--palette-grey-100);
+      margin-bottom: var(--space-lg);
+    }
+
+    .features-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--palette-grey-800);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: var(--space-md);
+    }
+
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-sm);
+      font-size: 14px;
+      color: var(--palette-grey-900);
+    }
+
+    .feature-list li .icon {
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .icon-check {
+      color: #22c55e;
+    }
+
+    /* ─── Comparison Table ──────────────────────────────────── */
+    .comparison-section {
+      margin-bottom: var(--space-4xl);
+    }
+
+    .section-heading {
+      font-size: clamp(24px, 3vw, 32px);
+      font-weight: 500;
+      color: var(--palette-grey-1100);
+      letter-spacing: -0.025em;
+      text-align: center;
+      margin-bottom: var(--space-2xl);
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .comparison-table thead th {
+      padding: var(--space-md) var(--space-lg);
+      text-align: left;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--palette-grey-800);
+      border-bottom: 2px solid var(--palette-grey-100);
+    }
+
+    .comparison-table thead th:first-child {
+      width: 40%;
+    }
+
+    .comparison-table thead th:not(:first-child) {
+      text-align: center;
+      width: 20%;
+    }
+
+    .comparison-table thead th.col-pro {
+      color: var(--palette-blue-600);
+    }
+
+    .comparison-table tbody td {
+      padding: var(--space-md) var(--space-lg);
+      border-bottom: 1px solid var(--palette-grey-50);
+      color: var(--palette-grey-900);
+    }
+
+    .comparison-table tbody td:not(:first-child) {
+      text-align: center;
+    }
+
+    .comparison-table tbody tr:hover td {
+      background: var(--palette-grey-10);
+    }
+
+    .comparison-table .row-group-header td {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--palette-grey-800);
+      background: var(--palette-grey-10);
+      padding: var(--space-sm) var(--space-lg);
+      border-bottom: 1px solid var(--palette-grey-100);
+    }
+
+    .comparison-table .row-group-header:hover td {
+      background: var(--palette-grey-10);
+    }
+
+    .check-yes {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      background: #dcfce7;
+      border-radius: 50%;
+      color: #16a34a;
+    }
+
+    .check-no {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      color: var(--palette-grey-200);
+    }
+
+    /* ─── FAQ ───────────────────────────────────────────────── */
+    .faq-section {
+      margin-bottom: var(--space-4xl);
+    }
+
+    .faq-list {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .faq-item {
+      border: 1px solid var(--palette-grey-100);
+      border-radius: var(--shape-corner-md);
+      overflow: hidden;
+      transition: box-shadow 0.15s;
+    }
+
+    .faq-item:hover {
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--palette-grey-1100);
+      padding: var(--space-lg) var(--space-xl);
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-md);
+      transition: background 0.15s;
+    }
+
+    .faq-question:hover {
+      background: var(--palette-grey-10);
+    }
+
+    .faq-chevron {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      color: var(--palette-grey-800);
+      transition: transform 0.2s;
+    }
+
+    .faq-item.open .faq-chevron {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 0 var(--space-xl) var(--space-lg);
+      font-size: 14px;
+      color: var(--palette-grey-800);
+      line-height: 1.7;
+    }
+
+    .faq-item.open .faq-answer {
+      display: block;
+    }
+
+    /* ─── CTA Banner ────────────────────────────────────────── */
+    .cta-banner {
+      background: var(--palette-grey-1200);
+      border-radius: var(--shape-corner-lg);
+      padding: var(--space-4xl) var(--page-margin);
+      text-align: center;
+      margin: 0 0 var(--space-4xl);
+    }
+
+    .cta-banner h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 500;
+      color: var(--palette-grey-0);
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: var(--space-md);
+    }
+
+    .cta-banner p {
+      font-size: 17px;
+      color: var(--palette-grey-200);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .cta-banner .btn-primary {
+      font-size: 16px;
+      padding: 13px 32px;
+    }
+
+    /* ─── Footer ────────────────────────────────────────────── */
+    .footer {
+      border-top: 1px solid var(--palette-grey-100);
+      padding: var(--space-2xl) 0;
+      text-align: center;
+    }
+
+    .footer p {
+      font-size: 13px;
+      color: var(--palette-grey-800);
+    }
+
+    /* ─── Responsive ────────────────────────────────────────── */
+    @media (max-width: 960px) {
+      :root { --page-margin: 40px; }
+
+      .pricing-cards {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .pricing-card.pro {
+        order: -1;
+      }
+
+      .comparison-table thead th:not(:first-child),
+      .comparison-table tbody td:not(:first-child) {
+        padding: var(--space-sm);
+      }
+    }
+
+    @media (max-width: 640px) {
+      :root { --page-margin: 16px; }
+
+      .nav { padding: 0 var(--space-md); }
+
+      .nav-links { display: none; }
+
+      .pricing-hero { padding: var(--space-3xl) 0 var(--space-2xl); }
+
+      .comparison-table { display: none; }
+
+      .cta-banner { padding: var(--space-3xl) var(--space-lg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── Nav ──────────────────────────────────────────────── -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <!-- Coffee cup SVG -->
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="10" width="16" height="14" rx="3" fill="#3279F9"/>
+          <path d="M20 13h2a3 3 0 0 1 0 6h-2" stroke="#3279F9" stroke-width="2" stroke-linecap="round"/>
+          <rect x="7" y="5" width="2.5" height="4" rx="1.25" fill="#3279F9" opacity="0.5"/>
+          <rect x="11.5" y="3" width="2.5" height="5" rx="1.25" fill="#3279F9" opacity="0.5"/>
+          <rect x="5" y="24" width="14" height="2" rx="1" fill="#3279F9" opacity="0.3"/>
+          <path d="M8 17c0-1.5 2-1.5 2-3" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M12 17c0-1.5 2-1.5 2-3" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        Mocha
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Product</a></li>
+        <li><a href="pricing.html" class="active">Pricing</a></li>
+        <li><a href="docs.html">Docs</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="btn-ghost">Sign in</button>
+        <button class="btn-primary">Get started</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ─── Page ──────────────────────────────────────────────── -->
+  <main class="page">
+    <div class="container">
+
+      <!-- Hero -->
+      <section class="pricing-hero">
+        <h1>Simple, transparent pricing</h1>
+        <p>Start free. Scale as you build.</p>
+      </section>
+
+      <!-- Billing Toggle -->
+      <div class="billing-toggle">
+        <span class="toggle-label active" id="label-monthly">Monthly</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="billing-toggle" />
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </label>
+        <span class="toggle-label" id="label-annual">
+          Annual <span class="annual-badge" style="margin-left:6px">Save 20%</span>
+        </span>
+      </div>
+
+      <!-- Pricing Cards -->
+      <div class="pricing-cards">
+
+        <!-- Free -->
+        <div class="pricing-card">
+          <div class="card-tier free">Free</div>
+          <div class="card-name">Starter</div>
+          <div class="card-description">For individual developers exploring Mocha.</div>
+          <div class="card-price">
+            <div class="price-amount"><span class="price-currency">$</span>0</div>
+            <div class="price-period">per month, forever free</div>
+            <div class="price-original">&nbsp;</div>
+          </div>
+          <button class="card-cta ghost">Start for free</button>
+          <div class="card-divider"></div>
+          <div class="features-label">Included</div>
+          <ul class="feature-list">
+            <li>
+              <svg class="icon icon-check" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#dcfce7"/><path d="M5 8l2 2 4-4" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              50 AI completions / day
+            </li>
+            <li>
+              <svg class="icon icon-check" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#dcfce7"/><path d="M5 8l2 2 4-4" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              1 project
+            </li>
+            <li>
+              <svg class="icon icon-check" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#dcfce7"/><path d="M5 8l2 2 4-4" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Community support
+            </li>
+            <li>
+              <svg class="icon icon-check" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#dcfce7"/><path d="M5 8l2 2 4-4" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Basic code analysis
+            </li>
+          </ul>
+        </div>
+
+        <!-- Pro -->
+        <div class="pricing-card pro">
+          <div class="popular-badge">Most popular</div>
+          <div class="card-tier">Pro</div>
+          <div class="card-name">Professional</div>
+          <div class="card-description">For professional developers who move fast.</div>
+          <div class="card-price">
+            <div class="price-amount">
+              <span class="price-currency">$</span><span data-monthly="19" data-annual="15" id="pro-price">19</span>
+            </div>
+            <div class="price-period">per month</div>
+            <div class="price-original" id="pro-original">&nbsp;</div>
+          </div>
+          <button class="card-cta filled">Start Pro trial</button>
+          <div class="card-divider"></div>
+          <div class="features-label">Everything in Free, plus</div>
+          <ul class="feature-list">
+            <li>
+              <svg class="icon icon-check" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#dcfce7"/><path d="M5 8l2 2 4-4" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Unlimited AI completions
+            </li>
+            <li>
+              <svg class="icon icon-check" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#dcfce7"/><path d="M5 8l2 2 4-4" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              10 projects
+            </li>
+            <li>
+              <svg class="icon icon-check" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#dcfce7"/><path d="M5 8l2 2 4-4" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Email support
+            </li>
+            <li>
+              <svg class="icon icon-check" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#dcfce7"/><path d="M5 8l2 2 4-4" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Advanced code analysis
+            </li>
+            <li>
+              <svg class="icon icon-check" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#dcfce7"/><path d="M5 8l2 2 4-4" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Custom agents
+            </li>
+            <li>
+              <svg class="icon icon-check" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#dcfce7"/><path d="M5 8l2 2 4-4" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Priority model access
+            </li>
+          </ul>
+        </div>
+
+        <!-- Team -->
+        <div class="pricing-card">
+          <div class="card-tier team">Team</div>
+          <div class="card-name">Team</div>
+          <div class="card-description">For teams building together at scale.</div>
+          <div class="card-price">
+            <div class="price-amount">
+              <span class="price-currency">$</span><span data-monthly="49" data-annual="39" id="team-price">49</span>
+            </div>
+            <div class="price-period">per seat / month</div>
+            <div class="price-original" id="team-original">&nbsp;</div>
+          </div>
+          <button class="card-cta ghost">Talk to sales</button>
+          <div class="card-divider"></div>
+          <div class="features-label">Everything in Pro, plus</div>
+          <ul class="feature-list">
+            <li>
+              <svg class="icon icon-check" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#dcfce7"/><path d="M5 8l2 2 4-4" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Unlimited projects
+            </li>
+            <li>
+              <svg class="icon icon-check" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#dcfce7"/><path d="M5 8l2 2 4-4" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              SSO / SAML
+            </li>
+            <li>
+              <svg class="icon icon-check" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#dcfce7"/><path d="M5 8l2 2 4-4" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Audit logs
+            </li>
+            <li>
+              <svg class="icon icon-check" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#dcfce7"/><path d="M5 8l2 2 4-4" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Dedicated support
+            </li>
+            <li>
+              <svg class="icon icon-check" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#dcfce7"/><path d="M5 8l2 2 4-4" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Admin controls
+            </li>
+            <li>
+              <svg class="icon icon-check" width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#dcfce7"/><path d="M5 8l2 2 4-4" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Usage analytics
+            </li>
+          </ul>
+        </div>
+
+      </div><!-- /pricing-cards -->
+
+      <!-- Feature Comparison Table -->
+      <section class="comparison-section">
+        <h2 class="section-heading">Compare plans</h2>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Free</th>
+              <th class="col-pro">Pro</th>
+              <th>Team</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="row-group-header"><td colspan="4">AI Capabilities</td></tr>
+            <tr>
+              <td>AI code completions</td>
+              <td>50 / day</td>
+              <td>Unlimited</td>
+              <td>Unlimited</td>
+            </tr>
+            <tr>
+              <td>Custom agents</td>
+              <td><span class="check-no"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="#CDD4DC" stroke-width="1.5" stroke-linecap="round"/></svg></span></td>
+              <td><span class="check-yes"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></td>
+              <td><span class="check-yes"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></td>
+            </tr>
+            <tr>
+              <td>Priority model access</td>
+              <td><span class="check-no"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="#CDD4DC" stroke-width="1.5" stroke-linecap="round"/></svg></span></td>
+              <td><span class="check-yes"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></td>
+              <td><span class="check-yes"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></td>
+            </tr>
+            <tr>
+              <td>Code analysis depth</td>
+              <td>Basic</td>
+              <td>Advanced</td>
+              <td>Advanced</td>
+            </tr>
+            <tr class="row-group-header"><td colspan="4">Projects & Collaboration</td></tr>
+            <tr>
+              <td>Projects</td>
+              <td>1</td>
+              <td>10</td>
+              <td>Unlimited</td>
+            </tr>
+            <tr>
+              <td>Team members</td>
+              <td><span class="check-no"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="#CDD4DC" stroke-width="1.5" stroke-linecap="round"/></svg></span></td>
+              <td><span class="check-no"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="#CDD4DC" stroke-width="1.5" stroke-linecap="round"/></svg></span></td>
+              <td><span class="check-yes"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></td>
+            </tr>
+            <tr>
+              <td>Usage analytics</td>
+              <td><span class="check-no"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="#CDD4DC" stroke-width="1.5" stroke-linecap="round"/></svg></span></td>
+              <td><span class="check-no"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="#CDD4DC" stroke-width="1.5" stroke-linecap="round"/></svg></span></td>
+              <td><span class="check-yes"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></td>
+            </tr>
+            <tr class="row-group-header"><td colspan="4">Security & Compliance</td></tr>
+            <tr>
+              <td>SSO / SAML</td>
+              <td><span class="check-no"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="#CDD4DC" stroke-width="1.5" stroke-linecap="round"/></svg></span></td>
+              <td><span class="check-no"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="#CDD4DC" stroke-width="1.5" stroke-linecap="round"/></svg></span></td>
+              <td><span class="check-yes"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></td>
+            </tr>
+            <tr>
+              <td>Audit logs</td>
+              <td><span class="check-no"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="#CDD4DC" stroke-width="1.5" stroke-linecap="round"/></svg></span></td>
+              <td><span class="check-no"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="#CDD4DC" stroke-width="1.5" stroke-linecap="round"/></svg></span></td>
+              <td><span class="check-yes"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></td>
+            </tr>
+            <tr>
+              <td>Admin controls</td>
+              <td><span class="check-no"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="#CDD4DC" stroke-width="1.5" stroke-linecap="round"/></svg></span></td>
+              <td><span class="check-no"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="#CDD4DC" stroke-width="1.5" stroke-linecap="round"/></svg></span></td>
+              <td><span class="check-yes"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></td>
+            </tr>
+            <tr class="row-group-header"><td colspan="4">Support</td></tr>
+            <tr>
+              <td>Community forum</td>
+              <td><span class="check-yes"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></td>
+              <td><span class="check-yes"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></td>
+              <td><span class="check-yes"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></td>
+            </tr>
+            <tr>
+              <td>Email support</td>
+              <td><span class="check-no"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="#CDD4DC" stroke-width="1.5" stroke-linecap="round"/></svg></span></td>
+              <td><span class="check-yes"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></td>
+              <td><span class="check-yes"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></td>
+            </tr>
+            <tr>
+              <td>Dedicated support</td>
+              <td><span class="check-no"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="#CDD4DC" stroke-width="1.5" stroke-linecap="round"/></svg></span></td>
+              <td><span class="check-no"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="#CDD4DC" stroke-width="1.5" stroke-linecap="round"/></svg></span></td>
+              <td><span class="check-yes"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- FAQ -->
+      <section class="faq-section">
+        <h2 class="section-heading">Frequently asked questions</h2>
+        <div class="faq-list">
+
+          <div class="faq-item">
+            <button class="faq-question">
+              What's included in the Free plan?
+              <svg class="faq-chevron" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25l4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="faq-answer">
+              The Free plan gives you 50 AI-powered code completions per day, access to one project, basic code analysis, and community forum support — forever. No credit card required. It's a great way to explore Mocha's capabilities before committing to a paid plan.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              Can I switch plans at any time?
+              <svg class="faq-chevron" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25l4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="faq-answer">
+              Yes. You can upgrade, downgrade, or cancel your plan at any time. Upgrades take effect immediately and are prorated for the remainder of your billing period. Downgrades take effect at the end of your current billing cycle so you keep access until then.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              Is there a student or education discount?
+              <svg class="faq-chevron" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25l4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="faq-answer">
+              Absolutely. We offer a 50% discount on the Pro plan for verified students and educators. Apply via our <a href="#" style="color:var(--palette-blue-600)">education program page</a> with your institutional email address. Qualifying non-profits and open-source projects may also apply for discounted access.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              What does Enterprise pricing look like?
+              <svg class="faq-chevron" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25l4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="faq-answer">
+              Enterprise plans are custom-quoted and include everything in Team, plus volume seat discounts, self-hosted or VPC deployment options, a dedicated customer success manager, custom SLAs, compliance reporting (SOC 2, GDPR), and advanced security controls. Reach out via our sales form and we'll respond within one business day.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question">
+              Do unused AI completions roll over?
+              <svg class="faq-chevron" viewBox="0 0 18 18" fill="none"><path d="M4.5 6.75L9 11.25l4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="faq-answer">
+              On the Free plan, the daily 50-completion limit resets every 24 hours and does not roll over. Pro and Team plans provide unlimited completions, so rollover is not applicable — use as many as your workflow demands.
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- CTA Banner -->
+      <section>
+        <div class="cta-banner">
+          <h2>Start building with Mocha today</h2>
+          <p>Join thousands of developers shipping faster with AI-native development.</p>
+          <button class="btn-primary">Get started free</button>
+        </div>
+      </section>
+
+    </div><!-- /container -->
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; 2026 Mocha. All rights reserved.</p>
+      </div>
+    </footer>
+
+  </main>
+
+  <script>
+    // ─── Billing Toggle ───────────────────────────────────────
+    const toggle       = document.getElementById('billing-toggle');
+    const labelMonthly = document.getElementById('label-monthly');
+    const labelAnnual  = document.getElementById('label-annual');
+    const proPrice     = document.getElementById('pro-price');
+    const teamPrice    = document.getElementById('team-price');
+    const proOriginal  = document.getElementById('pro-original');
+    const teamOriginal = document.getElementById('team-original');
+
+    function updatePrices() {
+      const isAnnual = toggle.checked;
+
+      labelMonthly.classList.toggle('active', !isAnnual);
+      labelAnnual.classList.toggle('active', isAnnual);
+
+      if (isAnnual) {
+        proPrice.textContent   = proPrice.dataset.annual;
+        teamPrice.textContent  = teamPrice.dataset.annual;
+        proOriginal.textContent  = '$19/mo billed monthly';
+        teamOriginal.textContent = '$49/mo billed monthly';
+      } else {
+        proPrice.textContent   = proPrice.dataset.monthly;
+        teamPrice.textContent  = teamPrice.dataset.monthly;
+        proOriginal.textContent  = '\u00a0';
+        teamOriginal.textContent = '\u00a0';
+      }
+    }
+
+    toggle.addEventListener('change', updatePrices);
+
+    // ─── FAQ accordion ───────────────────────────────────────
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+        // close all
+        document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+        // toggle current
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+  </script>
+</body>
+</html>
